@@ -17,7 +17,7 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3001');
+const port = normalizePort(process.env.PORT || '3002');
 app.set('port', port);
 
 const errorHandler = error => {
@@ -42,9 +42,6 @@ const errorHandler = error => {
 
 const server = http.createServer(app);
 
-// server.applyMiddleware({ app, path: "/graphql" })
-
-
 server.on('error', errorHandler);
 server.on('listening', () => {
   const address = server.address();
@@ -59,8 +56,6 @@ var io = socketio(server,{
   }
 });
 chat(io);
-
-
 
 
 

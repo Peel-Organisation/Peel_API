@@ -7,28 +7,28 @@ class User {
   static addUser = async (email, password) => {
     const sql = "INSERT INTO user (email, password) VALUES (?, ?)";
 
-    const result = await mysql.query(sql, [email, password]).catch((err) => err.message);
+    const result = await mysql.query(sql, [email, password]).catch((err) => console.log(err.message));
     return typeof result === "string" ? result : result[0];
   };
 
   static getUserById = async (id) => {
     const sql = "SELECT * FROM user WHERE id = '?'";
 
-    con.query(sql, id).catch((err) => err.message);
+    con.query(sql, id).catch((err) => console.log(err.message));
     return typeof result === "string" ? result : result[0];
   };
 
   static getUserByEmail = async (email) => {
     const sql = "SELECT * FROM user WHERE email = ?";
 
-    const result = await mysql.query(sql, [email]).catch((err) => err.message);
+    const result = await mysql.query(sql, [email]).catch((err) => console.log(err.message));
     return typeof result === "string" ? result : result[0];
   };
 
   static getAllUser = async () => {
     const sql = "SELECT * FROM user";
 
-    const result = mysql.query(sql).catch((err) => err.message);
+    const result = mysql.query(sql).catch((err) => console.log(err.message));
     return typeof result === "string" ? result : result[0];
   };
 

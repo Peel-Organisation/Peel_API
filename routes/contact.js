@@ -9,9 +9,9 @@ const ContactController = require('../controllers/contact');
 
 
 
-router.get('/:id',auth, ContactController.getContactById);
+router.get('/:id', auth, ContactController.getContactById);
 
-router.get('/list/:id',auth, ContactController.getContactListById);
+router.get('/list/:id', auth, ContactController.getContactListById);
  
 
 

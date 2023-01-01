@@ -17,13 +17,12 @@ app.use(express.json());
 
 
 const profileRoutes = require('./routes/profile');
-const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 const interetRoutes = require('./routes/interet');
 const questionRoutes = require('./routes/question');
 const matchRoutes = require('./routes/match');
 const contactRoutes = require('./routes/contact');
 const chatRoutes = require('./routes/chat');
-const userRoutes = require('./routes/user');
 
 
 
@@ -37,17 +36,11 @@ app.use((req, res, next) => {
 // app.use(bodyParser.json());
 
 app.use('/api/profile', profileRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', userRoutes);
 app.use('/api/interet', interetRoutes);
 app.use('/api/question', questionRoutes);
 app.use('/api/match', matchRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/chat', chatRoutes);
-app.use('/api/user', userRoutes);
-
-
-
-
- 
 
 module.exports = app;

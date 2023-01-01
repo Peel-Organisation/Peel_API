@@ -1,14 +1,39 @@
 const express = require('express');
 const router = express.Router();
+const { body, validationResult } = require('express-validator');
+const auth = require('../middleware/auth');
 
-const user = require('../middleware/user');
 
-const authController = require('../controllers/user');
 
-router.get('/', user, authController.getAllUser);
-router.post('/', user, authController.addUser);
-router.get('/:id', user, authController.getUserById);
-router.put('/:id', user, authController.updateUserById);
-router.delete('/:id', user, authController.deleteThing);
+
+const userController = require('../controllers/user');
+
+// router.post('/signup', 
+//         body('email')
+//         .isEmail()
+//         .custom(value => {
+//             return User.findUserByEmail(value).then(user => {
+//                 if (user) {
+//                     return Promise.reject('E-mail already in use ', user);
+//                 }
+//             });
+//         })
+//         .withMessage('Invalid pawword'),
+//         body('password')
+//         .isLength({ min: 5 })
+//         .matches(/\d/)
+//         .withMessage('Invalid pawword'),
+//         userController.register
+//     );
+
+router.post('/signup',  
+        body('email').isEmail(),
+        userController.register
+    );
+router.post('/signin', 
+        userController.login
+    );
+
+router.get("/protected", auth, userController.protected);
 
 module.exports = router;
