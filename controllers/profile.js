@@ -10,9 +10,12 @@ const auth = require('../middleware/auth');
 
 
 exports.getProfileById = (req, res) => {
-
+  console.log(req.params.id)
   profile.getProfileById(req.params.id)
-  .then(response => {res.status(200).json(response[0]);})
+  .then(response => {
+    console.log(response)
+    res.status(200).json(response[0]);
+  })
 }
 
 exports.getLocalisationById = (req, res) => {

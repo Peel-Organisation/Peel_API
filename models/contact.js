@@ -13,7 +13,7 @@ class Contact {
 
   static getContactListById = async (user_id) => {
     const sql = "SELECT contact.contact_id, profile.firstname FROM contact INNER JOIN profile ON profile.user_id = contact.contact_id WHERE contact.user_id = ?";
-
+    
     const result = await mysql.query(sql, user_id).catch((err) => err.message);
     // console.log(result[0]);
     return typeof result === "string" ? result : result[0];
