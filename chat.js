@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid').v4;
 
-const messageModel = require('./models/message');
-const profileModel = require('./models/profile');
+const messageModel = require('./models/old/message');
+const profileModel = require('./models/old/profile');
 
 
 var messages = new Set();

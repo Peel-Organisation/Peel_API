@@ -1,10 +1,10 @@
-const profile = require('../models/profile');
-const interet_relation = require('../models/interet_relation')
-const localisation = require('../models/localisation')
-const question_relation = require('../models/question_relation')
-const recherche = require('../models/recherche')
-const match = require('../models/match')
-const contact = require('../models/contact')
+const profile = require('../models/old/profile');
+const interet_relation = require('../models/old/interet_relation')
+const localisation = require('../models/old/localisation')
+const question_relation = require('../models/old/question_relation')
+const recherche = require('../models/old/recherche')
+const match = require('../models/old/match')
+const contact = require('../models/old/contact')
 
 
 

@@ -1,4 +1,4 @@
-const mysql = require("../config/mysql");
+const mysql = require("../../config/mysql");
 const recherche = require('./recherche');
 const profile = require('./profile');
 const localisation = require('./localisation')

@@ -1,4 +1,4 @@
-const model = require('../models/question');
+const model = require('../models/old/question');
 
 
 
