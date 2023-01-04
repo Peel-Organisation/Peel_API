@@ -1,39 +1,21 @@
+
+
+
 const express = require('express');
+
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
+const userController = require('../controllers/conversation.controller');
+const {verifyAdmin} = require('../middlewares/verifyAdmin');
+const {verifyToken} = require('../middlewares/verifyToken');
 
 
-
-
-const userController = require('../controllers/user');
-
-// router.post('/signup', 
-//         body('email')
-//         .isEmail()
-//         .custom(value => {
-//             return User.findUserByEmail(value).then(user => {
-//                 if (user) {
-//                     return Promise.reject('E-mail already in use ', user);
-//                 }
-//             });
-//         })
-//         .withMessage('Invalid pawword'),
-//         body('password')
-//         .isLength({ min: 5 })
-//         .matches(/\d/)
-//         .withMessage('Invalid pawword'),
-//         userController.register
-//     );
-
-router.post('/signup',  
-        body('email').isEmail(),
-        userController.register
-    );
-router.post('/signin', 
-        userController.login
-    );
-
-router.get("/protected", auth, userController.protected);
+router.get('/user/:id',  userController.getUser);
+router.update('/user',  userController.updateUser);
+router.delete('/user/:id',  userController.deleteUser);
 
 module.exports = router;
+
+// Routes user (jwt protected): 
+// 	-updateUser (champs à update)
+// -deleteUser
+ 

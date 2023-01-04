@@ -1,4 +1,4 @@
-const Chat = require('../models/old/message');
+const Chat = require('../../models/old/message');
 
 exports.getMessageListById = (req, res, next) => {
     // console.log(req.headers)

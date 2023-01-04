@@ -1,20 +1,16 @@
+
 const express = require('express');
 
 const router = express.Router();
+const userController = require('../controllers/user.controller');
+const {verifyToken} = require('../middlewares/verifyToken');
 
-const auth = require('../middleware/auth');
-
-const matchController = require('../controllers/match');
-
-
-
-
-router.get('/:id',auth, matchController.findMatch);
-
-router.post('/:id',auth, matchController.addLike);
-
-
-
-
+router.get('/swipeProfil',  userController.getSwipeProfil);
+router.get('/swipeVocal',  userController.getSwipeVocal);
+router.post('/like/:id',  userController.like);
 
 module.exports = router;
+
+// 	-getSwipeProfilUser 
+// 	-getSwipeVocalUser 
+// 	-likeUser

@@ -1,10 +1,10 @@
 const express = require('express');
 
-const auth = require('../middleware/auth');
+const auth = require('../../middleware/auth');
 
 const router = express.Router();
 
-const ContactController = require('../controllers/contact');
+const ContactController = require('../../controllers/old/contact');
 
 
 

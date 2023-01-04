@@ -1,4 +1,4 @@
-const contact = require('../models/old/contact');
+const contact = require('../../models/old/contact');
 
 
 

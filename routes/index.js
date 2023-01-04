@@ -2,21 +2,21 @@ const express = require('express');
 
 const router = express.Router();
 
-const profileRoutes = require('./profile');
-const userRoutes = require('./user');
+const authRoutes = require('./auth');
+const conversationRoutes = require('./user');
 const interetRoutes = require('./interet');
-const questionRoutes = require('./question');
 const matchRoutes = require('./match');
-const contactRoutes = require('./contact');
-const chatRoutes = require('./chat');
+const questionRoutes = require('./question');
+const userRoutes = require('./user');
 
-router.use('/api/profile', profileRoutes);
-router.use('/api/auth', userRoutes);
+
+router.use('/api/auth', authRoutes);
+router.use('/api/conversation', conversationRoutes);
 router.use('/api/interet', interetRoutes);
-router.use('/api/question', questionRoutes);
 router.use('/api/match', matchRoutes);
-router.use('/api/contact', contactRoutes);
-router.use('/api/chat', chatRoutes);
+router.use('/api/question', questionRoutes);
+router.use('/api/user', userRoutes);
+
 
 
 module.exports = router;

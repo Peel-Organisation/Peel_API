@@ -1,10 +1,10 @@
 const bcrypt  = require('bcrypt');
-const model = require('../models/user');
-const interet_relation = require('../models/old/interet_relation')
-const localisation = require('../models/old/localisation')
-const profile = require('../models/old/profile')
-const question_relation = require('../models/old/question_relation')
-const recherche = require('../models/old/recherche')
+const model = require('../../models/user');
+const interet_relation = require('../../models/old/interet_relation')
+const localisation = require('../../models/old/localisation')
+const profile = require('../../models/old/profile')
+const question_relation = require('../../models/old/question_relation')
+const recherche = require('../../models/old/recherche')
 
 const jwt = require('jsonwebtoken');
 
