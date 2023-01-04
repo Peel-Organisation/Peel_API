@@ -1,8 +1,6 @@
 const mysql = require("../config/mysql");
 
 
-
-
 class User {
   static addUser = async (email, password) => {
     const sql = "INSERT INTO user (email, password) VALUES (?, ?)";

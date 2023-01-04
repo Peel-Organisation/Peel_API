@@ -2,6 +2,9 @@ const http = require('http');
 const app = require('./app');
 var chat = require('./chat');
 const socketio = require("socket.io");
+const mongoose = require('mongoose');
+require('dotenv').config();
+
 
 
 
@@ -18,7 +21,20 @@ const normalizePort = val => {
   return false;
 };
 const port = normalizePort(process.env.PORT || '3002');
-app.set('port', port);
+app.set('port', port); 
+
+
+mongoose.set('strictQuery', false);
+
+mongoose.connect(
+  `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@peeldb.xaoe2as.mongodb.net/?retryWrites=true&w=majority`,
+).then(() => {
+  console.log('successfully connect to database');
+}).catch((err) => console.log(err));
+
+
+
+
 
 const errorHandler = error => {
   if (error.syscall !== 'listen') {

@@ -1,5 +1,16 @@
 # Routes List
+## A faire Clément
+- Linter - npm init @eslint/config (automatisé a chaque commit)
+- Prettier (automatisé a chaque commit)
+- babel build 
+- Image docker 
+- Déployement
 
+## A faire
+- lister les routes finales
+- structure bdd
+- conversion bdd mango
+- finir api
 
 ## /api/profile
 get     /:id    

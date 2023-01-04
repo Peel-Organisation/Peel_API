@@ -109,10 +109,11 @@ class Match {
     const liked = await mysql.query(sql2,user_id).catch((err) => err.message);
 
     var tab_liked = typeof liked === "string" ? liked : liked[0];
-
-    for (let index = 0; index < tab_liked.length; index++) {
-      tab_liked[index] = tab_liked[index].user_id;
-      
+    if (tab_liked != undefined ){
+      for (let index = 0; index < tab_liked.length; index++) {
+        tab_liked[index] = tab_liked[index].user_id;
+        
+      }
     }
 
 
