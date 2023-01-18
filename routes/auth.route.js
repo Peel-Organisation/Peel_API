@@ -8,8 +8,13 @@ const {
 const {verifyToken} = require('../middlewares/verifyToken');
 
 
-router.post('/register', checkEmail, checkPassword, checkIdentity, validation, authController.register);
+router.post('/register', authController.register);
 router.post('/login', checkEmail, checkPassword, validation, authController.login);
-router.post("/get_user_by_token", authController.getUserByToken);
+router.post("/protected", authController.getUserByToken);
+
+
+  // /api/auth/register/         -       register
+  // /api/auth/login/         -       login
+  // /api/auth/protected       -       testAutentification
 
 module.exports = router; 

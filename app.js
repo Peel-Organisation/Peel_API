@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 app.use(express.json());
 
-app.use('/api/v1', apiRouter);
+app.use('/api', apiRouter);
 
 
 
