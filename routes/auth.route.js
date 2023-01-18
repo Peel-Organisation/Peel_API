@@ -5,12 +5,12 @@ const authController = require('../controllers/auth.controller');
 const {
   checkEmail, checkIdentity, checkPassword, validation,
 } = require('../middlewares/validators');
-const {verifyToken} = require('../middlewares/verifyToken');
+const verifyToken = require('../middlewares/verifyToken');
 
 
 router.post('/register', authController.register);
 router.post('/login', checkEmail, checkPassword, validation, authController.login);
-router.post("/protected", authController.getUserByToken);
+router.get("/protected", verifyToken, authController.getUserByToken);
 
 
   // /api/auth/register/         -       register

@@ -1,21 +1,26 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-secretJWT = process.env.JWT_SECRET;
+function verifyToken (req, res, next) {
 
-verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
-
+  const token = req.headers["authorization"];
   if (!token) {
-    return res.status(403).send({ message: "No token provided!" });
+    return res.status(403).send({
+      auth: false,
+      token: null,
+      message:"No token provided !"
+    })
   }
-
-  jwt.verify(token, secretJWT, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({ message: "Unauthorized!" });
+  jwt.verify(token, process.env.JWT_SECRET, function (error, jwtDecoded) {
+    if (error) {
+      return res.status(401).send({
+        auth: false,
+        token: null,
+        message:"Unauthorized !"
+      })
     }
-    req.codename = decoded.codename;
+    req.userToken = jwtDecoded;
     next();
-  });
-};
+  })
+}
 
 module.exports = verifyToken;
