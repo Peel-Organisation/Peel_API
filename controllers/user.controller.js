@@ -9,7 +9,7 @@ exports.getSwipeVocal = async (req, res, next) => {
 
 exports.like = async (req, res, next) => {
   res.send("successfully logged in");
-};
+}; 
 
 exports.getUser = async (req, res, next) => {
   res.send("successfully logged in");
