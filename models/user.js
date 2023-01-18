@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema({
     blocked: Array,
     preferences: Object,
     bio: String,
+    isAdmin: { type: Boolean, default: False },
+    isPremium: { type: Boolean, default: False },
+    isVerified: { type: Boolean, default: False },
+    isBanned: { type: Boolean, default: False },
+    isDeleted: { type: Boolean, default: False },
+    isFake: { type: Boolean, default: False },
 });
 
 module.exports = mongoose.model('User', userSchema);

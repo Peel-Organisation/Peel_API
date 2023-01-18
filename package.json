@@ -4,7 +4,8 @@
   "description": "backend projet dev ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "faker": "nodemon ./faker.js"
   },
   "author": "Damien Drozd",
   "license": "ISC",
@@ -23,5 +24,8 @@
     "mysql2": "^2.3.3",
     "socket.io": "4.5.1",
     "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0"
   }
 }
