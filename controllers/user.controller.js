@@ -1,17 +1,3 @@
-const User = require("../models/user");
-
-exports.getSwipeProfil = async (req, res, next) => {
-  res.send("successfully logged in");
-};
-
-exports.getSwipeVocal = async (req, res, next) => {
-  res.send("successfully logged in");
-};
-
-exports.like = async (req, res, next) => {
-  res.send("successfully logged in");
-}; 
-
 
 exports.getUser = async (req, res, next) => {
   User.findById(req.userToken.id)
