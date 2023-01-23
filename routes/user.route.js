@@ -9,10 +9,10 @@ const {verifyAdmin} = require('../middlewares/verifyAdmin');
 const verifyToken = require('../middlewares/verifyToken');
 
 
-router.get('/user', verifyToken, userController.getUser);
-router.put('/user',  verifyToken, userController.updateUser);
-router.delete('/user',  verifyToken, userController.deleteUser);
-router.get('/users',  userController.getAllUsers);
+router.get('/', verifyToken, userController.getUser);
+router.put('/',  verifyToken, userController.updateUser);
+router.delete('/',  verifyToken, userController.deleteUser);
+router.get('/',  userController.getAllUsers);
 
 // TODO: Avoir un utilisateur admin pour utiliser les routes ci-dessous :
 // router.get('/useradmin/:id', verifyAdmin, userController.getUserAdmin);

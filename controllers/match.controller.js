@@ -2,7 +2,6 @@ const User = require('../models/user');
 
 
 exports.getSwipeProfil = async (req, res, next) => {
-
     User.find()
     .then((users) => res.send(users))
     .catch((err) => res.status(400).send(err));

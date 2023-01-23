@@ -4,11 +4,16 @@ exports.BlockMatch = async (req, res, next) => {
 };
 
 exports.getAllConversation = async (req, res, next) => {
-  res.send("successfully logged in");
+  console.log("get all conversation")
+  User.find()
+    .then((users) => res.send(users.matches))
+    .catch((err) => res.status(400).send(err));
 };
 
 exports.getMessageConversation = async (req, res, next) => {
-  res.send("successfully logged in");
+  User.find()
+    .then((users) => res.send(users))
+    .catch((err) => res.status(400).send(err));
 };
 
 exports.deleteConversation = async (req, res, next) => {

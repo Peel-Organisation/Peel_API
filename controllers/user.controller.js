@@ -1,3 +1,4 @@
+const User = require("../models/user.js");
 
 exports.getUser = async (req, res, next) => {
   User.findById(req.userToken.id)
@@ -14,6 +15,7 @@ exports.getUser = async (req, res, next) => {
 
 
 exports.updateUser = async (req, res, next) => {
+  console.log("user to update : ", req.body)
   User.findByIdAndUpdate(req.userToken.id, req.body)
   .then((user) => {
     if (!user) {
@@ -21,6 +23,7 @@ exports.updateUser = async (req, res, next) => {
         message: "User Not found",
       });
     }
+    console.log("user updated : ", user);
     User.findById(user._id).then(userupdated => {
       res.send(userupdated);
     })

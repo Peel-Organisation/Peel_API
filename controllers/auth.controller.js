@@ -12,16 +12,28 @@ exports.register = async (req, res, next) => {
   });
 
   try {
-    const newUserToSave = await newUser.save();
-    return res.send({
-      message: "User successfully registered",
-      user: newUserToSave,
-    });  } catch (error) {
+    await newUser.save()
+      .then((user) => {
+        let userToken = jwt.sign(
+          {
+            id: user._id,
+          },
+          process.env.JWT_SECRET
+        );
+        res.send({
+          message: "User " + user._id + " successfully registered",
+          auth: true,
+          token: userToken,
+          userId: user._id,
+        });
+      })  
+  } catch (error) {
     next(error);
   }
 };
 
 exports.login = async (req, res, next) => {
+  console.log(req.body.email)
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
@@ -45,6 +57,7 @@ exports.login = async (req, res, next) => {
       res.send({
         message: "User " + user._id + " successfully logged in",
         auth: true,
+        userId: user._id,
         token: userToken,
       });
     })
