@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
     questions: Array,
     interests: Array,
     gifLink: String,
-    matches: Array,
+    matches: [{ 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Conversation"
+   }],
     likes: Array,
     likedBy: Array,
     blocked: Array,

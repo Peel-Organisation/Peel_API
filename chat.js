@@ -1,6 +1,6 @@
 const uuidv4 = require('uuid').v4;
 
-const messageModel = require('./models/old/message');
+const Conversation = require('./models/conversation');
 const profileModel = require('./models/old/profile');
 
 
@@ -22,11 +22,17 @@ class Connection {
   }
   
   sendMessage(message) {
+    console.log("message sent : ", message);
     this.io.sockets.emit('message', message);
   }
   
   getMessages(msg) {
-    // console.log(msg)
+    console.log("getMessages : ", msg)
+    Conversation.findOne({_id : msg.conversationId})
+    .populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
+    .then(conversation => {
+      conversation.forEach((message) => this.sendMessage(message));
+    })
     messageModel.getMessageListById(msg.user_id, msg.target_id).then(messages => {
 
         // console.log(messages)
@@ -36,43 +42,40 @@ class Connection {
   }
 
   async handleMessage(msg) {
-    var user = await profileModel.getProfileById(msg.user_id);
-    // console.log(user)
-    const message = {
-      id: uuidv4(),
-      user_id: msg.user_id,
-      target_id: msg.target_id,
-      message_value: msg.value,
-      message_time: Date.now(),
-      firstname: user[0].firstname
-    };  
+    console.log(msg)
+    const message = msg.value
+    const conversationId = msg.conversation_id 
+    const userId = msg.user_id
+    console.log(message)
+    console.log(conversationId)
+    console.log(userId)
+    Conversation.findOneAndUpdate(
+      { _id:
+        conversationId },
+      { $push: { messages: {content : message, sender : userId}, last_message_content : message }}
+    ).populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
+    .then(conversation => {
+      let message = conversation.messages[conversation.messages.length - 1];
+      let newMessage = {"content": message.content, "sender": message.sender, "_id": message._id, "conversation_id": conversationId, "createdAt": message.createdAt};
+      console.log(newMessage)
+      this.sendMessage(newMessage);
+    })
 
-    // console.log(message);
-
-    messageModel.addMessage(message.user_id, message.target_id, message.message_value, message.message_time);
-
-    
-    // messages.add(message);
-    this.sendMessage(message);
-
-    setTimeout(
-      () => {
+    setTimeout(() => {
         messages.delete(message);
         this.io.sockets.emit('deleteMessage', message.id);
-      },
-      
-    );
+      });
+    }
+
+    disconnect() {
+      users.delete(this.socket);
+    }
   }
 
-  disconnect() {
-    users.delete(this.socket);
-  }
-}
-
-function chat(io) {
-  io.on('connection', (socket) => {
-    new Connection(io, socket);   
-  });
-};
+  function chat(io) {
+    io.on('connection', (socket) => {
+      new Connection(io, socket);   
+    });
+  };
 
 module.exports = chat;
