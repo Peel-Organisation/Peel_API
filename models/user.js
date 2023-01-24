@@ -9,21 +9,45 @@ const userSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now },
     birthday: Date,
     gender: String,
-    position: Object,
+    position: {
+      longitude: Number,
+      latitude: Number
+    },
     favouriteMusic: String,
     favouriteMovie: String,
-    questions: Array,
-    interests: Array,
+    questions: [{ question : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question"
+      },
+      answer: String
+    }],
+    interests: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Interest"
+    }],
     gifLink: String,
     matches: [{ 
       type: mongoose.Schema.Types.ObjectId,
       ref: "Conversation"
-   }],
-    likes: Array,
-    likedBy: Array,
-    blocked: Array,
-    preferences: Object,
+    }],
+    likes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"}],
+    likedBy: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"}],
+    blocked: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"}],
+    preferences: {
+      age : {
+        min: Number,
+        max: Number
+      },
+      searchRange : Number,
+      sexual_orientation : String
+    },
     biographie: String,
 });
-
+  
 module.exports = mongoose.model('User', userSchema);

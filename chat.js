@@ -52,7 +52,7 @@ class Connection {
     Conversation.findOneAndUpdate(
       { _id:
         conversationId },
-      { $push: { messages: {content : message, sender : userId}, last_message_content : message }}
+      { $push: { messages: {content : message, sender : userId}}, $set: {last_message_content : message}}
     ).populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
     .then(conversation => {
       let message = conversation.messages[conversation.messages.length - 1];

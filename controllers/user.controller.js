@@ -2,6 +2,8 @@ const User = require("../models/user.js");
 
 exports.getUser = async (req, res, next) => {
   User.findById(req.userToken.id)
+  .populate('interests')
+  .populate({path : 'questions', populate : "question"})
   .then(user => {
     if (!user) {
       return res.status(404).send({
@@ -17,6 +19,7 @@ exports.getUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   console.log("user to update : ", req.body)
   User.findByIdAndUpdate(req.userToken.id, req.body)
+  .populate('interests')
   .then((user) => {
     if (!user) {
       return res.status(404).send({
@@ -24,9 +27,7 @@ exports.updateUser = async (req, res, next) => {
       });
     }
     console.log("user updated : ", user);
-    User.findById(user._id).then(userupdated => {
-      res.send(userupdated);
-    })
+    res.send(user);
   })
   .catch(error => res.status(400).send(error));
 };
