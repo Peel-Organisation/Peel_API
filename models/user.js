@@ -8,24 +8,46 @@ const userSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     birthday: Date,
-    position: Object,
-    favourite_music: String,
-    favourite_movie: String,
-    questions: Array,
-    interests: Array,
-    gif_link: String,
-    matches: Array,
-    likes: Array,
-    liked_by: Array,
-    blocked: Array,
-    preferences: Object,
-    bio: String,
-    isAdmin: { type: Boolean, default: False },
-    isPremium: { type: Boolean, default: False },
-    isVerified: { type: Boolean, default: False },
-    isBanned: { type: Boolean, default: False },
-    isDeleted: { type: Boolean, default: False },
-    isFake: { type: Boolean, default: False },
+    gender: String,
+    position: {
+      longitude: Number,
+      latitude: Number
+    },
+    favouriteMusic: String,
+    favouriteMovie: String,
+    questions: [{ question : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question"
+      },
+      answer: String
+    }],
+    interests: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Interest"
+    }],
+    gifLink: String,
+    matches: [{ 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Conversation"
+    }],
+    likes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"}],
+    likedBy: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"}],
+    blocked: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"}],
+    preferences: {
+      age : {
+        min: Number,
+        max: Number
+      },
+      searchRange : Number,
+      sexual_orientation : String
+    },
+    biographie: String,
 });
-
+  
 module.exports = mongoose.model('User', userSchema);

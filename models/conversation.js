@@ -1,8 +1,19 @@
 const mongoose = require('mongoose');
 
 const conversationSchema = new mongoose.Schema({
-    members: Object,
-    messages: Array,
+    members: [{ 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+   }],
+    messages: [{ 
+        content: String,
+        sender: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        createdAt: { type: Date, default: Date.now },
+        Status: String,
+   }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     last_message_content: String,

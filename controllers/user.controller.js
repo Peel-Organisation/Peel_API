@@ -1,20 +1,9 @@
-const User = require("../models/user");
-
-exports.getSwipeProfil = async (req, res, next) => {
-  res.send("successfully logged in");
-};
-
-exports.getSwipeVocal = async (req, res, next) => {
-  res.send("successfully logged in");
-};
-
-exports.like = async (req, res, next) => {
-  res.send("successfully logged in");
-}; 
-
+const User = require("../models/user.js");
 
 exports.getUser = async (req, res, next) => {
   User.findById(req.userToken.id)
+  .populate('interests')
+  .populate({path : 'questions', populate : "question"})
   .then(user => {
     if (!user) {
       return res.status(404).send({
@@ -28,16 +17,17 @@ exports.getUser = async (req, res, next) => {
 
 
 exports.updateUser = async (req, res, next) => {
+  console.log("user to update : ", req.body)
   User.findByIdAndUpdate(req.userToken.id, req.body)
+  .populate('interests')
   .then((user) => {
     if (!user) {
       return res.status(404).send({
         message: "User Not found",
       });
     }
-    User.findById(user._id).then(userupdated => {
-      res.send(userupdated);
-    })
+    console.log("user updated : ", user);
+    res.send(user);
   })
   .catch(error => res.status(400).send(error));
 };
