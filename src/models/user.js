@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema({
       sexual_orientation : String
     },
     biographie: String,
+    isFake: { type: Boolean, default: false}
 });
   
 module.exports = mongoose.model('User', userSchema);

@@ -20,8 +20,11 @@ const normalizePort = val => {
   }
   return false;
 };
+
 const port = normalizePort(process.env.PORT || '3002');
 app.set('port', port); 
+
+
 
 
 mongoose.set('strictQuery', false);
