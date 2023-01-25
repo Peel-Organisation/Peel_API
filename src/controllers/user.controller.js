@@ -91,3 +91,15 @@ exports.getAllUsers = async (req, res, next) => {
   })
   .catch(error => res.status(400).send(error));
 };
+
+
+exports.createUser = async (req, res, next) => {
+  console.log("user to create : ", req.body)
+  const user = new User(req.body);
+  console.log("user created : ", user)
+  user.save()
+  .then(user => {
+    res.send(user);
+  })  
+  .catch(error => res.status(400).send(error));
+};

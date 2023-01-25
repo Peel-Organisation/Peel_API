@@ -4,12 +4,16 @@
   "description": "backend projet dev ",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --exec babel-node ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "faker": "nodemon ./faker.js",
+    "build": "babel ./src --out-dir build"
   },
   "author": "Damien Drozd",
   "license": "ISC",
   "dependencies": {
+    "@babel/node": "^7.20.7",
+    "axios": "^1.2.4",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "cors": "2.8.5",
@@ -24,5 +28,11 @@
     "mysql2": "^2.3.3",
     "socket.io": "4.5.1",
     "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@faker-js/faker": "^7.6.0"
   }
 }
