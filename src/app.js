@@ -15,11 +15,13 @@ app.use(bodyParser.json())
 
 app.use(express.json());
 
-app.use('/api/v1', apiRouter);
+app.use('/api', apiRouter);
 
 
 
 app.use((req, res, next) => {
+  console.log('Requête reçue !');
+  // console.log(req);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
