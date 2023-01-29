@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/index.js",
+    "start": "nodemon ./build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "faker": "nodemon ./faker.js",
     "build": "babel ./src --out-dir build"
@@ -26,6 +27,7 @@
     "mongoose": "^6.8.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
+    "nodemon": "^2.0.20",
     "socket.io": "4.5.1",
     "uuid": "8.3.2"
   },

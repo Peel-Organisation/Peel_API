@@ -7,7 +7,6 @@ exports.BlockMatch = async (req, res, next) => {
 
 exports.getAllConversation = async (req, res, next) => {
   console.log(req.userToken)
-  userId = req.userToken.id
 
   User.findOne({_id : req.userToken.id})
   .populate({path : 'matches', select: ["members", "updatedAt", "last_message_content"], populate : {path : 'members', select : 'firstName'}})
@@ -18,7 +17,7 @@ exports.getAllConversation = async (req, res, next) => {
 
 exports.getMessageConversation = async (req, res, next) => {
     console.log(req.headers.conversation_id)
-    conversationId = req.headers.conversation_id
+    let conversationId = req.headers.conversation_id
     Conversation.findOne({_id : conversationId})
     .populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
     .then(conversation => {
@@ -34,14 +33,14 @@ exports.createConversation = async (req, res, next) => {
   });
 
   //ajout de la conversation dans la liste des conversations de l'utilisateur 1
-  User1 = await User.findOneAndUpdate(
+  const User1 = await User.findOneAndUpdate(
     { _id: req.body.user1 },
-    { $push: { matches: [newConversation]}}
+    { $push: { matches: [newConversation]}} 
   );
   
 
   //ajout de la conversation dans la liste des conversations de l'utilisateur 2
-  User2 = await User.findOneAndUpdate(
+  const User2 = await User.findOneAndUpdate(
     { _id:
       req.body.user2 },
     { $push: { matches: [newConversation] }}
@@ -69,10 +68,9 @@ exports.deleteMessage = async (req, res, next) => {
 };
 
 exports.sendMessage = async (req, res, next) => {
-  message = req.body.message
-  conversationId = req.body.conversationId 
-  userId = req.userToken.id
-  console.log(message)
+  const message = req.body.message
+  const conversationId = req.body.conversationId 
+  const userId = req.userToken.id
   Conversation.findOneAndUpdate(
     { _id:
       conversationId },

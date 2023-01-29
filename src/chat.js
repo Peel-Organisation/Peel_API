@@ -54,11 +54,15 @@ class Connection {
         conversationId },
       { $push: { messages: {content : message, sender : userId}}, $set: {last_message_content : message}}
     ).populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
-    .then(conversation => {
-      let message = conversation.messages[conversation.messages.length - 1];
-      let newMessage = {"content": message, "sender": message.sender, "_id": message._id, "conversation_id": conversationId, "createdAt": message.createdAt};
-      console.log(newMessage)
-      this.sendMessage(newMessage);
+    .then(() => {
+      Conversation.findById(conversationId)
+      .populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
+      .then(conversation => {
+        let message = conversation.messages[conversation.messages.length - 1];
+        let newMessage = {"content": message, "sender": message.sender, "_id": message._id, "conversation_id": conversationId, "createdAt": message.createdAt};
+        console.log(newMessage)
+        this.sendMessage(newMessage);
+      })
     })
 
     setTimeout(() => {
