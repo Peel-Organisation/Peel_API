@@ -45,11 +45,11 @@ exports.deleteUser = async (req, res, next) => {
 };
 
 exports.getUserAdmin = async (req, res, next) => {
-  User.findById(req.params.id)
+  User.findById(req.userToken.id)
   .then(user => {
     if (!user) {
       return res.status(404).send({
-        message: "User Not found with id " + req.params.id,
+        message: "User Not found with id " + req.userToken.id,
       });
     }
     res.send(user);
