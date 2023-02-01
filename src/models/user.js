@@ -4,7 +4,6 @@ const userSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     email: String,
-    isAdmin: { type: Boolean, default: false},
     password: String,
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
@@ -49,7 +48,7 @@ const userSchema = new mongoose.Schema({
       sexual_orientation : String
     },
     biographie: String,
-    isFake: { type: Boolean, default: false},
+    isFake: { type: Boolean, default: false}
 });
   
 module.exports = mongoose.model('User', userSchema);

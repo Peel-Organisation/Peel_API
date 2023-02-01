@@ -17,7 +17,6 @@ exports.register = async (req, res, next) => {
         let userToken = jwt.sign(
           {
             id: user._id,
-            isAdmin: user.isAdmin
           },
           process.env.JWT_SECRET
         );
@@ -26,7 +25,6 @@ exports.register = async (req, res, next) => {
           auth: true,
           token: userToken,
           userId: user._id,
-          isAdmin: user.isAdmin
         });
       })  
   } catch (error) {
@@ -53,7 +51,6 @@ exports.login = async (req, res, next) => {
       let userToken = jwt.sign(
         {
           id: user._id,
-          isAdmin : user.isAdmin
         },
         process.env.JWT_SECRET
       );
