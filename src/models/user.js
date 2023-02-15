@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
       ref: "Conversation"
     }],
     likes: [
-        {
+      {
         userID: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User"
@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
           enum: ['like', 'dislike'],
           default: 'dislike',
           trim: true
-        }
+        },
+        _id : false
       }
     ],
     likedBy: [ 
@@ -55,7 +56,8 @@ const userSchema = new mongoose.Schema({
           enum: ['like', 'dislike'],
           default: 'dislike',
           trim: true
-        }
+        },
+        _id : false
       }
     ],
     blocked: [{
@@ -70,7 +72,8 @@ const userSchema = new mongoose.Schema({
       sexual_orientation : String
     },
     biographie: String,
-    isFake: { type: Boolean, default: false}
+    isFake: { type: Boolean, default: false},
+    isAdmin : { type: Boolean, default: false}
     
 });
   

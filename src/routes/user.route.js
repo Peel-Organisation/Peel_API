@@ -12,7 +12,7 @@ const verifyToken = require('../middlewares/verifyToken');
 router.get('/', verifyToken, userController.getUser);
 router.put('/',  verifyToken, userController.updateUser);
 router.delete('/',  verifyToken, userController.deleteUser);
-router.get('/',  userController.getAllUsers);
+router.get('/all',  userController.getAllUsers);
 router.post("/", userController.createUser);
 
 // TODO: Avoir un utilisateur admin pour utiliser les routes ci-dessous :
