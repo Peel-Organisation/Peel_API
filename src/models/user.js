@@ -30,12 +30,34 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Conversation"
     }],
-    likes: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"}],
-    likedBy: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"}],
+    likes: [
+        {
+        userID: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User"
+        },
+        statelike: {
+          type: String,
+          enum: ['like', 'dislike'],
+          default: 'dislike',
+          trim: true
+        }
+      }
+    ],
+    likedBy: [ 
+      {
+        userID : {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        }, 
+        statelike: { 
+          type: String,
+          enum: ['like', 'dislike'],
+          default: 'dislike',
+          trim: true
+        }
+      }
+    ],
     blocked: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"}],
@@ -49,6 +71,7 @@ const userSchema = new mongoose.Schema({
     },
     biographie: String,
     isFake: { type: Boolean, default: false}
+    
 });
   
 module.exports = mongoose.model('User', userSchema);
