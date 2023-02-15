@@ -1,6 +1,6 @@
 const Interest = require("../models/interest.js");
 
-exports.getAllinterest = async (req, res, next) => {
+exports.getAllInterest = async (req, res, next) => {
   Interest.find()
   .then(interests => {
     res.send(interests);
@@ -8,11 +8,19 @@ exports.getAllinterest = async (req, res, next) => {
   .catch(error => res.status(400).send(error));
 };
 
-exports.getinterest = async (req, res, next) => {
-  res.send("successfully logged in");
+exports.getInterest = async (req, res, next) => {
+  Interest.findById(req.params.id)
+  .then(interest => {
+    if (!interest) {
+      return res.status(404).send({
+        message: "Interest Not found with id " + req.params.id,
+      });
+    }
+    res.send(interest);
+  })
 };
 
-exports.addinterest = async (req, res, next) => {
+exports.addInterest = async (req, res, next) => {
   if (req.body.name === undefined) {
     return res.status(400).send({
       message: "name is required",
@@ -29,10 +37,27 @@ exports.addinterest = async (req, res, next) => {
   });
 };
 
-exports.deleteinterest = async (req, res, next) => {
-  res.send("successfully logged in");
+exports.deleteInterest = async (req, res, next) => {
+  Interest.findByIdAndDelete(req.params.id).then(interest => {
+    if (!interest) {
+      return res.status(404).send({
+        message: "Interest Not found with id " + req.params.id,
+      });
+    }
+    res.send(interest);
+  })
+  .catch(error => res.status(400).send(error));
 };
 
-exports.updateinterest = async (req, res, next) => {
-  res.send("successfully logged in");
+exports.updateInterest = async (req, res, next) => {
+  Interest.findByIdAndUpdate(req.params.id, req.body)
+  .then((interest) => {
+    if (!interest) {
+      return res.status(404).send({
+        message: "Interest Not found",
+      });
+    }
+    res.send(interest);
+  })
+  .catch(error => res.status(400).send(error));
 };
