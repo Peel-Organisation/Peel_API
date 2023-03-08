@@ -5,9 +5,13 @@ const questionController = require('../controllers/question.controller.js');
 // const verifyAdmin = require('../middlewares/verifyAdmin.js');
 
 router.get('/',  questionController.getAllQuestion);
+router.get('/random', questionController.getRandomQuestion);
 router.get('/:id',  questionController.getQuestion);
+
 router.post('/',  questionController.addQuestion);
+
 router.delete('/:id',  questionController.deleteQuestion);
+
 router.put('/:id',  questionController.updateQuestion);
 
 module.exports = router;
