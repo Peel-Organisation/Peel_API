@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const questionController = require('../controllers/question.controller.js');
-const {verifyAdmin} = require('../middlewares/verifyAdmin.js');
+// const verifyAdmin = require('../middlewares/verifyAdmin.js');
 
 router.get('/',  questionController.getAllQuestion);
 router.get('/random', questionController.getRandomQuestion);

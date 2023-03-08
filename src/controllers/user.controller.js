@@ -15,6 +15,19 @@ exports.getUser = async (req, res, next) => {
   .catch(error => res.status(400).send(error));
 };
 
+exports.getOneUser = async (req, res, next) => {
+  User.findById(req.params.id)
+  .then(user => {
+    console.log("user found : ", user);
+    if (!user) {
+      return res.status(404).send({
+        message: "User Not found with id " + req.params.id,
+      });
+    }
+    res.send(user);
+  })
+  .catch(error => res.status(400).send(error));
+};
 
 exports.updateUser = async (req, res, next) => {
   console.log("user to update : ", req.body)

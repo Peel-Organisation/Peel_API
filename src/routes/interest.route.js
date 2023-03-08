@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const interestController = require('../controllers/interest.controller.js');
-const {verifyAdmin} = require('../middlewares/verifyAdmin.js');
+// const verifyAdmin = require('../middlewares/verifyAdmin.js');
 
 router.get('/',  interestController.getAllInterest);
 router.get('/:id',  interestController.getInterest);
