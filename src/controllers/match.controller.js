@@ -99,15 +99,15 @@ exports.PutLikeDislike = async (req, res, next) => {
           userTarget : likedby
         }
       });
+    } else {
+      return res.status(200).send({
+        message: 'Like or dislike added to the current User and target User',
+        data : {
+          currentUser : like,
+          userTarget : likedby
+        }
+      });
     }
-    return res.status(200).send({
-      message: 'Like or dislike added to the current User and target User',
-      data : {
-        currentUser : like,
-        userTarget : likedby
-      }
-    });
-
   } catch (error) {
     res.status(500).send({
       message:'Some error occurred with the server : ' + error.message,
