@@ -32,7 +32,6 @@ exports.getSwipeVocal = async (req, res, next) => {
     .catch((err) => res.status(400).send(err));
 };
 
-
 /*
   * @route POST api/match/like_dislike/:id
   * @desc Like or dislike an user. When it's a match, create a conversation. 
@@ -43,6 +42,12 @@ exports.PutLikeDislike = async (req, res, next) => {
   try {
     const userTarget = await User.findById(req.params.id);
     const currentUser = await User.findById(req.userToken.id);
+
+    if (!userTarget) {
+      return res.status(404).send({
+        message: 'userTarget not found in database',
+      });
+    }
     
     const like = {
       userID: req.params.id,
@@ -54,9 +59,15 @@ exports.PutLikeDislike = async (req, res, next) => {
       statelike: req.body.statelike,
     };
 
-    if (!userTarget) {
-      return res.status(404).send({
-        message: 'userTarget not found in database',
+    if (!like.userID || !like.statelike) {
+      return res.status(400).send({
+        message: 'Invalid like data',
+      });
+    }
+  
+    if (!likedby.userID || !likedby.statelike) {
+      return res.status(400).send({
+        message: 'Invalid likedBy data',
       });
     }
 
@@ -67,11 +78,11 @@ exports.PutLikeDislike = async (req, res, next) => {
       return res.status(400).send({ 
         message: 'You already liked this user.' 
       });
-    } 
+    }
+
     currentUser.likes.push(like);
-    await currentUser.save();
     userTarget.likedBy.push(likedby);
-    await userTarget.save();
+    await Promise.all([currentUser.save(), userTarget.save()]);
 
     const isMatch = userTarget.likes.find((like) => like.userID.toString() === currentUser._id.toString() && like.statelike === 'like');
 
@@ -81,10 +92,11 @@ exports.PutLikeDislike = async (req, res, next) => {
         members: [currentUser._id, userTarget._id],
       });
       await conversation.save();
+
       currentUser.matches.push(conversation._id);
-      await currentUser.save();
       userTarget.matches.push(conversation._id);
-      await userTarget.save();
+      
+      await Promise.all([currentUser.save(), userTarget.save()]);
 
       return res.status(200).send({
         message: 'It\'s a match !',
