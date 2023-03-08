@@ -26,12 +26,6 @@ exports.getSwipeProfil = async (req, res, next) => {
 
 };
 
-exports.getSwipeVocal = async (req, res, next) => {
-  User.find()
-    .then((users) => res.send(users))
-    .catch((err) => res.status(400).send(err));
-};
-
 /*
   * @route POST api/match/like_dislike/:id
   * @desc Like or dislike an user. When it's a match, create a conversation. 
