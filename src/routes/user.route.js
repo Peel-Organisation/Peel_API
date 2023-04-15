@@ -18,7 +18,7 @@ router.post("/", userController.createUser);
 
 // TODO: Avoir un utilisateur admin pour utiliser les routes ci-dessous :
 // router.get('/useradmin/:id', verifyAdmin, userController.getUserAdmin);
-// router.put('/useradmin/:id', verifyAdmin, userController.updateUserAdmin);
+// router.put('/useradmin/:id', userController.updateUserAdmin);
 // router.delete('/useradmin/:id', verifyAdmin, userController.deleteUserAdmin);
 
 module.exports = router;

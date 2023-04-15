@@ -38,7 +38,6 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Interest"
     }],
-    gifLink: String,
     matches: [{ 
       type: mongoose.Schema.Types.ObjectId,
       ref: "Conversation"
@@ -56,7 +55,7 @@ const userSchema = new mongoose.Schema({
           trim: true
         },
         _id : false
-      }
+      } 
     ],
     likedBy: [ 
       {
