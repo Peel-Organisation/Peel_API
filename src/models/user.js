@@ -9,9 +9,13 @@ const userSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now },
     birthday: Date,
     gender: String,
+    // position: {
+    //   longitude: Number,
+    //   latitude: Number
+    // },
     position: {
-      longitude: Number,
-      latitude: Number
+      type: { type: String, enum: ['Point'] },
+      coordinates: [Number]
     },
     favouriteMusic: String,
     favouriteMovie: String,
@@ -76,5 +80,6 @@ const userSchema = new mongoose.Schema({
     isAdmin : { type: Boolean, default: false}
     
 });
-  
+
+userSchema.index({ position: '2dsphere' });
 module.exports = mongoose.model('User', userSchema);

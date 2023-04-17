@@ -7,6 +7,7 @@ const verifyToken = require('../middlewares/verifyToken');
 
 router.get('/swipeProfil', verifyToken, matchController.getSwipeProfil);
 router.post('/like_dislike/:id', verifyToken, matchController.PutLikeDislike);
+router.get('/getSwipeProfilUser', verifyToken, matchController.getCompatibleProfil);
 
 module.exports = router;
 
