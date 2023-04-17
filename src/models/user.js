@@ -13,6 +13,19 @@ const userSchema = new mongoose.Schema({
       longitude: Number,
       latitude: Number
     },
+    gif : {
+      id: String,
+      url: String,
+      title: String,
+      image: {
+        "height": Number,
+        "width": Number,
+        "url": String,
+        "webp": String,
+        "frames": Number,
+        "hash": String
+      }
+    },
     favouriteMusic: String,
     favouriteMovie: String,
     questions: [{ question : {
@@ -25,7 +38,6 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Interest"
     }],
-    gifLink: String,
     matches: [{ 
       type: mongoose.Schema.Types.ObjectId,
       ref: "Conversation"
@@ -43,7 +55,7 @@ const userSchema = new mongoose.Schema({
           trim: true
         },
         _id : false
-      }
+      } 
     ],
     likedBy: [ 
       {
