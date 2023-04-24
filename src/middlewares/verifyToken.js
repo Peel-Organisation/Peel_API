@@ -18,7 +18,6 @@ function verifyToken (req, res, next) {
         message:"Unauthorized !"
       })
     }
-    console.log("Auth success !")
     req.userToken = jwtDecoded;
     next();
   })

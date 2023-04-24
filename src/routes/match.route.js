@@ -10,5 +10,4 @@ router.post('/like_dislike/:id', verifyToken, matchController.PutLikeDislike);
 
 module.exports = router;
 
-// 	-getSwipeProfilUser 
 

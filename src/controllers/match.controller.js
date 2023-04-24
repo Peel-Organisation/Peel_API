@@ -54,7 +54,6 @@ exports.PutLikeDislike = async (req, res, next) => {
     const isAlreadyLiked = userTarget.likedBy.find((like) => like.userID.toString() === currentUser._id.toString());
 
     if (isAlreadyLiked) {
-      console.log('You already liked this user.');
       return res.status(400).send({ 
         message: 'You already liked this user.' 
       });
@@ -67,7 +66,6 @@ exports.PutLikeDislike = async (req, res, next) => {
     const isMatch = userTarget.likes.find((like) => like.userID.toString() === currentUser._id.toString() && like.statelike === 'like');
 
     if (isMatch) {
-      console.log('It\'s a match !');
       const conversation = new Conversation({
         members: [currentUser._id, userTarget._id],
       });

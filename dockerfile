@@ -1,23 +1,14 @@
-# Utilisez une image de base avec Node.js installé
-FROM node:14
+FROM node:alpine as base
 
-# Définir le répertoire de travail à l'intérieur du conteneur
 WORKDIR /app
 
-# Copiez le fichier package.json dans le conteneur
-COPY package*.json ./
+COPY . .
 
-# Installer les dépendances de l'API
-RUN npm install
+RUN rm -rf node_modules && npm install
 
-# Copiez le code source de l'API dans le conteneur
-COPY ./build ./build
+RUN npm run build
 
-# Définir la variable d'environnement pour l'API
-ENV PORT=3000
+# RUN rm -rf ./src
 
-# Exposez le port utilisé par l'API
-EXPOSE 3000
-
-# Démarrer l'API en utilisant le gestionnaire de processus PM2
-CMD ["npm", "start"]
+EXPOSE 3001
+CMD ["npm", "run", "start"]
