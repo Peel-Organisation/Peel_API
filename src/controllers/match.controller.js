@@ -20,8 +20,8 @@ exports.getSwipeProfil = async (req, res, next) => {
 */
 exports.PutLikeDislike = async (req, res, next) => {
   try {
-    const userTarget = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.userToken.id);
+    const userTarget = User.findById(req.params.id);
+    const currentUser = User.findById(req.userToken.id);
 
     if (!userTarget) {
       return res.status(404).send({
