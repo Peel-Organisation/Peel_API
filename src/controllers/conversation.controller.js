@@ -8,7 +8,6 @@ exports.BlockMatch = async (req, res, next) => {
 exports.getAllConversation = async (req, res, next) => {
   console.log(req.userToken)
   const userId = req.userToken.id
-
   User.findOne({_id : req.userToken.id})
   .populate({path : 'matches', select: ["members", "updatedAt", "last_message_content"], populate : {path : 'members', select : 'firstName'}})
   .then(user => {
@@ -36,7 +35,7 @@ exports.createConversation = async (req, res, next) => {
   //ajout de la conversation dans la liste des conversations de l'utilisateur 1
   const User1 = await User.findOneAndUpdate(
     { _id: req.body.user1 },
-    { $push: { matches: [newConversation]}}
+    { $push: { matches: [newConversation]}} 
   );
   
 
