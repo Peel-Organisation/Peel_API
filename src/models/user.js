@@ -85,8 +85,8 @@ const userSchema = new mongoose.Schema({
     },
     biographie: String,
     isFake: { type: Boolean, default: false},
-    isAdmin : { type: Boolean, default: false}
-    
+    isAdmin : { type: Boolean, default: false},
+    FirebaseToken: [{type: String, default: null}]
 });
   
 module.exports = mongoose.model('User', userSchema);

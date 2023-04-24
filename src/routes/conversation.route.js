@@ -3,15 +3,22 @@ const express = require('express');
 const router = express.Router();
 const conversationController = require('../controllers/conversation.controller');
 const verifyToken = require('../middlewares/verifyToken');
+const verifyAdmin = require('../middlewares/verifyAdmin');
 
-router.post('/block', conversationController.BlockMatch);
+// conversation
 router.get('/', verifyToken, conversationController.getAllConversation);
-router.post('/',  conversationController.createConversation);
-router.delete('/:id',  conversationController.deleteConversation);
-router.get('/:id',  conversationController.getMessageConversation);
+// router.post('/', verifyAdmin, conversationController.createConversation);
+// router.delete('/:id', verifyAdmin, conversationController.deleteConversation);
+router.post('/block', verifyToken, conversationController.BlockConversation);
+router.post('/unblock', verifyToken, conversationController.UnblockConversation);
+router.post('/report', verifyToken, conversationController.ReportConversation);
+
+
+// messages
+router.get('/message', verifyToken, conversationController.getMessageConversation);
 router.post('/message', verifyToken, conversationController.sendMessage);
-router.delete('/message/:id',  conversationController.deleteMessage);
-router.post('/vocal',  conversationController.sendVocal);
+router.delete('/message/:id', verifyToken, conversationController.deleteMessage);
+router.post('/vocal', verifyToken, conversationController.sendVocal);
 
 
 

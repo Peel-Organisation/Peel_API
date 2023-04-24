@@ -1,11 +1,9 @@
 const Conversation = require("../models/conversation.js");
 const User = require("../models/user.js");
-
-exports.BlockMatch = async (req, res, next) => {
-  res.send("successfully logged in");
-};
+const firebase = require("../firebase.js");
 
 exports.getAllConversation = async (req, res, next) => {
+  console.log("getAllConversation")
   User.findOne({_id : req.userToken.id})
   .populate({path : 'matches', select: ["members", "updatedAt", "last_message_content"], populate : {path : 'members', select : 'firstName'}})
   .then(user => {
@@ -13,17 +11,9 @@ exports.getAllConversation = async (req, res, next) => {
   })
 };
 
-exports.getMessageConversation = async (req, res, next) => {
-    const conversationId = req.headers.conversation_id
-    Conversation.findOne({_id : conversationId})
-    .populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
-    .then(conversation => {
-      res.send(conversation?.messages);
-    })
-};
-
 
 exports.createConversation = async (req, res, next) => {
+  console.log("createConversation")
   //création de la nouvelle conversation
   const newConversation = new Conversation({
     messages: [],
@@ -60,21 +50,50 @@ exports.deleteConversation = async (req, res, next) => {
   res.send("successfully logged in");
 };
 
-exports.deleteMessage = async (req, res, next) => {
+exports.BlockConversation = async (req, res, next) => {
   res.send("successfully logged in");
 };
 
-exports.sendMessage = async (req, res, next) => {
-  const message = req.body.message
-  const conversationId = req.body.conversationId 
-  const userId = req.userToken.id
-  Conversation.findOneAndUpdate(
-    { _id:
-      conversationId },
-    { $push: { messages: {content : message, sender : userId} }}
-  ).then(conversation => {
-    res.send("message sent");
+exports.UnblockConversation = async (req, res, next) => {
+  res.send("successfully logged in");
+};
+
+exports.ReportConversation = async (req, res, next) => {
+  res.send("successfully logged in");
+};
+
+
+//---------messages---------
+
+exports.getMessageConversation = async (req, res, next) => {
+  console.log("getMessageConversation")
+  const conversationId = req.headers.conversation_id
+  if (conversationId == null) return res.status(400).send({message: "conversation id is missing"});
+  Conversation.findOne({_id : conversationId})
+  .populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
+  .then(conversation => {
+    res.send(conversation?.messages);
   })
+};
+
+
+exports.sendMessage = async (req, res, next) => {
+  const conversationId = req.headers.conversation_id;
+  const userId = req.userToken.id;
+  const message = req.body.message;
+  Conversation.findOneAndUpdate(
+    { _id: conversationId },
+    { $push: { messages: {content : message, sender : userId} }, $set: {last_message_content : message} }
+  ).populate({path : 'members', select : 'firstName'})
+  .then((conversation) => {
+    firebase.sendMessageToFirebase(conversation.members, userId, message);
+    res.send({message: "message successfully added"});
+  })
+};
+
+
+exports.deleteMessage = async (req, res, next) => {
+  res.send("successfully logged in");
 };
 
 exports.sendVocal = async (req, res, next) => {
