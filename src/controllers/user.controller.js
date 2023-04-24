@@ -15,9 +15,20 @@ exports.getUser = async (req, res, next) => {
   .catch(error => res.status(400).send(error));
 };
 
+exports.getOneUser = async (req, res, next) => {
+  User.findById(req.params.id)
+  .then(user => {
+    if (!user) {
+      return res.status(404).send({
+        message: "User Not found with id " + req.params.id,
+      });
+    }
+    res.send(user);
+  })
+  .catch(error => res.status(400).send(error));
+};
 
 exports.updateUser = async (req, res, next) => {
-  console.log("user to update : ", req.body)
   User.findByIdAndUpdate(req.userToken.id, req.body)
   .populate('interests')
   .then((user) => {
@@ -26,7 +37,6 @@ exports.updateUser = async (req, res, next) => {
         message: "User Not found",
       });
     }
-    console.log("user updated : ", user);
     res.send(user);
   })
   .catch(error => res.status(400).send(error));
@@ -94,9 +104,7 @@ exports.getAllUsers = async (req, res, next) => {
 
 
 exports.createUser = async (req, res, next) => {
-  console.log("user to create : ", req.body)
   const user = new User(req.body);
-  console.log("user created : ", user)
   user.save()
   .then(user => {
     res.send(user);

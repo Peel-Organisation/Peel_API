@@ -1,6 +1,6 @@
 const http = require('http');
 const app = require('./app');
-var chat = require('./chat');
+const chat = require('./chat');
 const socketio = require("socket.io");
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -49,11 +49,9 @@ const errorHandler = error => {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges.');
       process.exit(1);
-      break;
     case 'EADDRINUSE':
       console.error(bind + ' is already in use.');
       process.exit(1);
-      break;
     default:
       throw error;
   }
@@ -68,7 +66,7 @@ server.on('listening', () => {
   console.log('Listening on ' + bind);
 });
 
-var io = socketio(server,{
+let io = socketio(server,{
   cors: {
     origin: '*',
     methods: ['GET', 'POST']
