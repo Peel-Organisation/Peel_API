@@ -26,6 +26,20 @@ const userSchema = new mongoose.Schema({
         "hash": String
       }
     },
+    movie:{
+      id: String,
+      title: String,
+      images: {
+        backdrop_path: String,
+        poster_path: String
+      },
+      genres_ids:[
+        {
+          id: Number,
+          name: String
+        }
+      ]
+    },
     favouriteMusic: String,
     favouriteMovie: String,
     questions: [{ question : {
