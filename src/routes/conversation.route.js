@@ -7,7 +7,7 @@ const verifyAdmin = require('../middlewares/verifyAdmin');
 
 // conversation
 router.get('/', verifyToken, conversationController.getAllConversation);
-// router.post('/', verifyAdmin, conversationController.createConversation);
+router.post('/', conversationController.createConversation);
 // router.delete('/:id', verifyAdmin, conversationController.deleteConversation);
 router.post('/block', verifyToken, conversationController.BlockConversation);
 router.post('/unblock', verifyToken, conversationController.UnblockConversation);
