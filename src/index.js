@@ -1,13 +1,7 @@
 const http = require('http');
 const app = require('./app');
-const chat = require('./chat');
-const socketio = require("socket.io");
 const mongoose = require('mongoose');
 require('dotenv').config();
-
-
-
-
 
 
 const normalizePort = val => {
@@ -67,13 +61,6 @@ server.on('listening', () => {
   console.log('Listening on ' + bind);
 });
 
-let io = socketio(server,{
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
-});
-chat(io);
 
 
 

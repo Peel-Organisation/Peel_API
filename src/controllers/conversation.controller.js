@@ -4,8 +4,10 @@ const firebase = require("../firebase.js");
 
 exports.getAllConversation = async (req, res, next) => {
   console.log("getAllConversation")
-  User.findOne({_id : req.userToken.id})
-  .populate({path : 'matches', select: ["members", "updatedAt", "last_message_content"], populate : {path : 'members', select : 'firstName'}})
+  User.findOne(
+    {_id : req.userToken.id}, 
+  )
+  .populate({path : 'matches', select: ["members", "updatedAt", "last_message_content", "nb_messages"], populate : {path : 'members', select : 'firstName'}})
   .then(user => {
     res.send(user.matches);
   })
@@ -67,10 +69,10 @@ exports.ReportConversation = async (req, res, next) => {
 
 exports.getMessageConversation = async (req, res, next) => {
   console.log("getMessageConversation")
-  const conversationId = req.headers.conversation_id
+  const conversationId = req.params.id
   if (conversationId == null) return res.status(400).send({message: "conversation id is missing"});
   Conversation.findOne({_id : conversationId})
-  .populate({path : 'messages', select: ["content", "sender", "createdAt"], populate : {path : 'sender', select : 'firstName'}})
+  .populate({path : 'messages', select: ["content", "sender", "createdAt"]})
   .then(conversation => {
     res.send(conversation?.messages);
   })
@@ -78,15 +80,17 @@ exports.getMessageConversation = async (req, res, next) => {
 
 
 exports.sendMessage = async (req, res, next) => {
-  const conversationId = req.headers.conversation_id;
+  const conversationId = req.params.id;
   const userId = req.userToken.id;
   const message = req.body.message;
   Conversation.findOneAndUpdate(
     { _id: conversationId },
-    { $push: { messages: {content : message, sender : userId} }, $set: {last_message_content : message} }
-  ).populate({path : 'members', select : 'firstName'})
+    { $push: { messages: {content : message, sender : userId} }, $set: {last_message_content : message, updatedAt : Date.now()}, $inc: {nb_messages : 1}},
+    { new: true }
+  ).populate({path : 'members', select : 'firebaseToken'})
   .then((conversation) => {
-    firebase.sendMessageToFirebase(conversation.members, userId, message);
+    let last_message = conversation.messages[conversation.messages.length - 1];
+    firebase.sendMessageToFirebase(conversation.members, userId, last_message);
     res.send({message: "message successfully added"});
   })
 };

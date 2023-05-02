@@ -15,8 +15,8 @@ router.post('/report', verifyToken, conversationController.ReportConversation);
 
 
 // messages
-router.get('/message', verifyToken, conversationController.getMessageConversation);
-router.post('/message', verifyToken, conversationController.sendMessage);
+router.get('/message/:id', verifyToken, conversationController.getMessageConversation);
+router.post('/message/:id', verifyToken, conversationController.sendMessage);
 router.delete('/message/:id', verifyToken, conversationController.deleteMessage);
 router.post('/vocal', verifyToken, conversationController.sendVocal);
 
