@@ -97,11 +97,11 @@ exports.sendMessage = async (req, res, next) => {
 
 
 exports.deleteMessage = async (req, res, next) => {
-  res.send("successfully logged in");
+  res.send("Message deleted");
 };
 
 exports.sendVocal = async (req, res, next) => {
-  res.send("successfully logged in");
+  res.send("message vocal sent");
 };
 
  
