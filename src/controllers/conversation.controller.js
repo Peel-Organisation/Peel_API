@@ -22,14 +22,14 @@ exports.createConversation = async (req, res, next) => {
   });
 
   //ajout de la conversation dans la liste des conversations de l'utilisateur 1
-  const User1 = User.findOneAndUpdate(
+  const User1 = await User.findOneAndUpdate(
     { _id: req.body.user1 },
     { $push: { matches: [newConversation]}} 
   );
   
 
   //ajout de la conversation dans la liste des conversations de l'utilisateur 2
-  const User2 = User.findOneAndUpdate(
+  const User2 = await User.findOneAndUpdate(
     { _id:
       req.body.user2 },
     { $push: { matches: [newConversation] }}
@@ -53,15 +53,15 @@ exports.deleteConversation = async (req, res, next) => {
 };
 
 exports.BlockConversation = async (req, res, next) => {
-  res.send("successfully logged in");
+  res.send("conversation bloqued");
 };
 
 exports.UnblockConversation = async (req, res, next) => {
-  res.send("successfully logged in");
+  res.send("conversation unbloqued");
 };
 
 exports.ReportConversation = async (req, res, next) => {
-  res.send("successfully logged in");
+  res.send("Conversation reported");
 };
 
 
