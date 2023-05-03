@@ -2,13 +2,19 @@ FROM node:alpine as base
 
 WORKDIR /app
 
-COPY . .
+COPY ./build ./build
 
-RUN rm -rf node_modules && npm install
+COPY ./package.json ./package.json
 
-RUN npm run build
+COPY ./.env ./.env
 
-# RUN rm -rf ./src
+COPY ./.firebaserc ./.firebaserc
 
-EXPOSE 3001
+COPY ./firebase-service-account-key.json ./firebase-service-account-key.json
+
+COPY ./firebase.json ./firebase.json
+
+RUN npm install --production
+
+EXPOSE 3000
 CMD ["npm", "run", "start"]
