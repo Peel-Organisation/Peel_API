@@ -3,7 +3,6 @@ const User = require("../models/user.js");
 const firebase = require("../firebase.js");
 
 exports.getAllConversation = async (req, res, next) => {
-  console.log("getAllConversation")
   User.findOne(
     {_id : req.userToken.id}, 
   )
@@ -15,7 +14,6 @@ exports.getAllConversation = async (req, res, next) => {
 
 
 exports.createConversation = async (req, res, next) => {
-  console.log("createConversation")
   //création de la nouvelle conversation
   const newConversation = new Conversation({
     messages: [],
@@ -68,7 +66,6 @@ exports.ReportConversation = async (req, res, next) => {
 //---------messages---------
 
 exports.getMessageConversation = async (req, res, next) => {
-  console.log("getMessageConversation")
   const conversationId = req.params.id
   if (conversationId == null) return res.status(400).send({message: "conversation id is missing"});
   Conversation.findOne({_id : conversationId})

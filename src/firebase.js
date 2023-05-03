@@ -9,7 +9,6 @@ firebase.initializeApp({
 });
 
 exports.sendMessageToFirebase = ((members, userId, message) => {
-  console.log("sendMessageToFirebase : ", members, userId, message)
   let tokenTab = []
   members.forEach(member => {
     member.firebaseToken.forEach(token => {
@@ -19,8 +18,6 @@ exports.sendMessageToFirebase = ((members, userId, message) => {
     })
   }
   )
-  console.log("senderTab : ", tokenTab)
-  console.log("message : ", message)
   firebase.messaging().sendToDevice(
     tokenTab, // ['token_1', 'token_2', ...]
     {
