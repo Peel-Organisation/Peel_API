@@ -9,16 +9,7 @@ exports.getAllQuestion = async (req, res, next) => {
 };
 
 exports.getQuestion = async (req, res, next) => {
-  Question.findById(req.params.id)
-  .then(question => {
-    if (!question) {
-      return res.status(404).send({
-        message: "Question Not found with id " + req.params.id,
-      });
-    }
-    res.send(question);
-  })
-  .catch(error => res.status(400).send(error));
+  res.send("successfully logged in");
 };
 
 exports.addQuestion = async (req, res, next) => {
@@ -32,44 +23,16 @@ exports.addQuestion = async (req, res, next) => {
   });
   await newQuestion.save().then((question) => {
     res.send({
-      message: "Question " + question._id + " successfully added",
+      message: "question " + question._id + " successfully added",
       question: question,
     });
   });
 };
 
 exports.deleteQuestion = async (req, res, next) => {
-  Question.findByIdAndDelete(req.params.id).then(question => {
-    if (!question) {
-      return res.status(404).send({
-        message: "Question Not found with id " + req.params.id,
-      });
-    }
-    res.send(question);
-  })
-  .catch(error => res.status(400).send(error));
+  res.send("successfully logged in");
 };
 
 exports.updateQuestion = async (req, res, next) => {
-  Question.findByIdAndUpdate(req.params.id, req.body)
-  .then((question) => {
-    if (!question) {
-      return res.status(404).send({
-        message: "Question Not found",
-      });
-    }
-    res.send(question);
-  })
-  .catch(error => res.status(400).send(error));
-};
-
-exports.getRandomQuestion = async (req, res, next) => {
-  Question.countDocuments().exec(function (err, count) {
-    var random = Math.floor(Math.random() * count);
-    Question.findOne().skip(random).exec(
-      function (err, result) {
-        res.send(result);
-      }
-    );
-  });
+  res.send("successfully logged in");
 };

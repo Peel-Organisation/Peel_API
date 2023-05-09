@@ -6,17 +6,13 @@ const {
   checkEmail, checkIdentity, checkPassword, validation,
 } = require('../middlewares/validators');
 const verifyToken = require('../middlewares/verifyToken');
+const saveToken = require('../middlewares/saveToken');
 
 
-// router.post('/register', checkEmail, checkPassword, validation, authController.register);
-// router.post('/login', checkEmail, checkPassword, validation, authController.login);
-router.get("/protected", verifyToken, authController.getUserByToken);
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.get("/protected", verifyToken, saveToken, authController.getUserByToken);
 
 
-  // /api/auth/register/         -       register
-  // /api/auth/login/         -       login
-  // /api/auth/protected       -       testAutentification
 
 module.exports = router; 

@@ -64,3 +64,12 @@ get     /:id
 put     /:id
 delete  /:id
 
+docker build -t peelapi .
+docker run -p 3001:3001 peelapi 
+
+docker tag peelapi damiendrz/peel_api:latest  
+ocker push damiendrz/peel_api:latest
+
+docker pull damiendrz/peel_api:latest
+docker run -d -p 3001:3001 damiendrz/peel_api:latest
+

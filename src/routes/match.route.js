@@ -11,5 +11,4 @@ router.get('/getSwipeProfilUser', verifyToken, matchController.getCompatibleProf
 
 module.exports = router;
 
-// 	-getSwipeProfilUser 
 

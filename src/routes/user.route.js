@@ -23,7 +23,4 @@ router.post("/", userController.createUser);
 
 module.exports = router;
 
-// Routes user (jwt protected): 
-// 	-updateUser (champs à update)
-// -deleteUser
  
