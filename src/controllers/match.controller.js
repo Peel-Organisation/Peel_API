@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const Conversation = require('../models/conversation');
+const moment = require('moment'); 
+const date = new Date();
 
 
 exports.getSwipeProfil = async (req, res, next) => {
@@ -23,36 +25,107 @@ exports.getCompatibleProfil = async (req, res, next) => {
       .populate("position")
       .populate("preferences")
       .then(user => {
-        console.log(user);
-        const userPosition = user.position;
-        console.log(userPosition);
-        const userPreferences = user.preferences;
+        // const userPosition = user.position;
+        // console.log(userPosition);
         // const maxDistance = userPreferences.searchRange * 1000;
-        const minAge = userPreferences.age.min ? userPreferences.age.min : 18;
-        const maxAge = userPreferences.age.max ? userPreferences.age.max : 60;
 
-        // console.log(minAge);
-        // console.log(maxAge);
-        console.log(userPosition);
+        const userPreferences = user.preferences;
+        const minBirth = moment(date).subtract(userPreferences.age.min, 'years');
+        const maxBirth = moment(date).subtract(userPreferences.age.max, 'years');
+
+        console.log("minAge : ", minBirth);
+        console.log("maxAge : ", maxBirth);
+
+
+        let age = (new Date() - new Date(user.birthday)) / (365.25 * 24 * 60 * 60 * 1000);
+        console.log("age : ", age);
+        console.log("user.birthday : ", user.birthday);
+
+        // préférences sexuelles de l'utilisateur
+        const userSexualOrientation = userPreferences.sexual_orientation;
+        console.log("userSexualOrientation : ", userSexualOrientation);
+        const userGender = user.gender;
+        console.log("userGender : ", userGender);
+
+        let sexeTab = []
+        let orientationTab = []
+
+
+        switch (userSexualOrientation) {
+          case "bisexual":
+            orientationTab.push("bisexual");
+            orientationTab.push("homo")
+            orientationTab.push("hetero")
+            sexeTab.push("Female");
+            sexeTab.push("Other");
+            sexeTab.push("Male");
+          case "homo":
+            orientationTab.push("homo")
+            orientationTab.push("bisexual");
+            if (userGender == "Male") sexeTab.push("Male")
+            else if (userGender == "Female") sexeTab.push("Female")
+          case "hetero":
+            orientationTab.push("hetero")
+            orientationTab.push("bisexual");
+            if (userGender == "Male") sexeTab.push("Female")
+            else if (userGender == "Female") sexeTab.push("Male")
+        }
+        if (userGender === "other") {
+          sexeTab.push("Female");
+          sexeTab.push("Other");
+          sexeTab.push("Male");
+        } 
+
+
+
+        // retirer les utilisateurs déja likés
+
+        console.log("user Likes : ", user.likes)
+
+        let likeTab = user.likes.map(like => {return like.userID})
+
 
         User.find({
-          _id:{ $ne: req.userToken.id },
-          position: {
-            $nearSphere: {
-              $geometry: {
-                type: "Point",
-                coordinates: [userPosition.longitude, userPosition.latitude]
-              },
-              $maxDistance: userPreferences.searchRange * 1000 || 100000,
-            }
-          },
-          age: {
-            $gte: userPreferences.age.min ? userPreferences.age.min : 18,
-            $lte: userPreferences.age.max ? userPreferences.age.max : 60,
-          },
+          _id : { 
+            $nin: likeTab
+          }
+          // birthday: {
+          //   $gt: maxBirth,
+          //   $lt: minBirth
+          // },
+          // "preferences.age.min": {
+          //   $lt: age
+          // },
+          // "preferences.age.max": {
+          //   $gt: age
+          // },
+          // gender: {
+          //   $in: sexeTab
+          // },
+          // "preferences.sexual_orientation": {
+          //   $in: orientationTab
+          // }
       })
       .then(profiles => {
-        console.log(profiles);
+        if (userSexualOrientation === "bisexual") {
+          profiles = profiles.filter(profile => {
+            if (profile.preferences.sexual_orientation == "bisexual") return true;
+
+            switch (userGender) {
+              case "Male":
+                if (profile.gender == "Male" && profile.preferences.sexual_orientation === "homo") return true;
+                else if (profile.gender == "Female" && profile.preferences.sexual_orientation === "hetero") return true;
+                else return false;
+              case "Female":
+                if (profile.gender == "Male" && profile.preferences.sexual_orientation === "hetero") return true;
+                else if (profile.gender == "Female" && profile.preferences.sexual_orientation === "homo") return true;
+                else return false;
+              case "Other":
+                return true
+            }
+          });
+        }
+        // console.log(profiles);
         res.send(profiles);
       })
       .catch(err => {
@@ -78,8 +151,8 @@ exports.getCompatibleProfil = async (req, res, next) => {
 */
 exports.PutLikeDislike = async (req, res, next) => {
   try {
-    const userTarget = User.findById(req.params.id);
-    const currentUser = User.findById(req.userToken.id);
+    const userTarget = await User.findById(req.params.id);
+    const currentUser = await User.findById(req.userToken.id);
 
     if (!userTarget) {
       return res.status(404).send({
@@ -109,19 +182,30 @@ exports.PutLikeDislike = async (req, res, next) => {
       });
     }
 
-    const isAlreadyLiked = userTarget.likedBy.find((like) => like.userID.toString() === currentUser._id.toString());
+    console.log("currentUser : ", currentUser.likes)
 
-    if (isAlreadyLiked) {
+    const isAlreadyLikedCurrent = currentUser.likes.find((like) => like?.userID?.toString() === userTarget?._id?.toString());
+
+    if (isAlreadyLikedCurrent) {
       return res.status(400).send({ 
-        message: 'You already liked this user.' 
+        message: 'You already liked this user in Current.' 
+      });
+    }
+
+    const isAlreadyLikedTarget = currentUser.likes.find((like) => like?.userID?.toString() === userTarget?._id?.toString());
+
+    if (isAlreadyLikedTarget) {
+      return res.status(400).send({ 
+        message: 'You already liked this user in target' 
       });
     }
 
     currentUser.likes.push(like);
     userTarget.likedBy.push(likedby);
-    await Promise.all([currentUser.save(), userTarget.save()]);
+    currentUser.save();
+    userTarget.save();
 
-    const isMatch = userTarget.likes.find((like) => like.userID.toString() === currentUser._id.toString() && like.statelike === 'like');
+    const isMatch = userTarget.likes.find((like) => like?.userID?.toString() === currentUser?._id?.toString() && like.statelike === 'like');
 
     if (isMatch) {
       const conversation = new Conversation({
@@ -132,7 +216,8 @@ exports.PutLikeDislike = async (req, res, next) => {
       currentUser.matches.push(conversation._id);
       userTarget.matches.push(conversation._id);
       
-      await Promise.all([currentUser.save(), userTarget.save()]);
+      currentUser.save();
+      userTarget.save();
 
       return res.status(200).send({
         message: 'It\'s a match !',
