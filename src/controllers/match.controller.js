@@ -88,23 +88,23 @@ exports.getCompatibleProfil = async (req, res, next) => {
         User.find({
           _id : { 
             $nin: likeTab
-          }
-          // birthday: {
-          //   $gt: maxBirth,
-          //   $lt: minBirth
-          // },
+          },
+          birthday: {
+            $gt: maxBirth,
+            $lt: minBirth
+          },
           // "preferences.age.min": {
           //   $lt: age
           // },
           // "preferences.age.max": {
           //   $gt: age
           // },
-          // gender: {
-          //   $in: sexeTab
-          // },
-          // "preferences.sexual_orientation": {
-          //   $in: orientationTab
-          // }
+          gender: {
+            $in: sexeTab
+          },
+          "preferences.sexual_orientation": {
+            $in: orientationTab
+          }
       })
       .then(profiles => {
         if (userSexualOrientation === "bisexual") {
