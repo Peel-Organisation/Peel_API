@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "faker": "nodemon ./faker.js",
     "faker-update": "nodemon ./faker-update.js",
-    "build": "babel ./src -d build && docker build -t peel_api . && docker-compose up -d"
+    "build": "babel ./src -d build"
   },
   "author": "Damien Drozd",
   "license": "ISC",
