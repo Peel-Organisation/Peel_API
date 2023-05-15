@@ -1,14 +1,14 @@
 # Author: Peel-Organisation
 # Construction step
-FROM node:latest as build
+FROM node:14-alpine as build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci 
 
 COPY . .
-CMD ["npm", "run", "start"]
+
 RUN npm run build
 
 # Production step
@@ -26,4 +26,4 @@ COPY --from=build /app/firebase.json ./firebase.json
 RUN npm ci --only=production
 
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
