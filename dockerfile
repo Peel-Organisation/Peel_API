@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 COPY . .
-
+CMD ["npm", "run", "start"]
 RUN npm run build
 
 # Production step
