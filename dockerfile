@@ -1,20 +1,29 @@
-FROM node:alpine as base
+# Author: Peel-Organisation
+# Construction step
+FROM node:latest as build
 
 WORKDIR /app
 
-COPY ./build ./build
+COPY package*.json ./
+RUN npm ci --only=production
 
-COPY ./package.json ./package.json
+COPY . .
 
-COPY ./.env ./.env
+RUN npm run build
 
-COPY ./.firebaserc ./.firebaserc
+# Production step
+FROM node:alpine as production
 
-COPY ./firebase-service-account-key.json ./firebase-service-account-key.json
+WORKDIR /app
 
-COPY ./firebase.json ./firebase.json
+COPY --from=build /app/build ./build
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/.env ./.env
+COPY --from=build /app/.firebaserc ./.firebaserc
+COPY --from=build /app/firebase-service-account-key.json ./firebase-service-account-key.json
+COPY --from=build /app/firebase.json ./firebase.json
 
-RUN npm install --production
+RUN npm ci --only=production
 
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]
