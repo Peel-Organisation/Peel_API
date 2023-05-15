@@ -1,6 +1,6 @@
 # Author: Peel-Organisation
 # Construction step
-FROM node:14-alpine as build
+FROM node:alpine as build
 
 WORKDIR /app
 
