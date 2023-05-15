@@ -23,7 +23,7 @@ COPY --from=build /app/.firebaserc ./.firebaserc
 # COPY --from=build /app/firebase-service-account-key.json ./firebase-service-account-key.json
 COPY --from=build /app/firebase.json ./firebase.json
 
-RUN npm ci --only=production
+RUN npm install
 
 EXPOSE 3000
 CMD ["npm", "run", "start"]
