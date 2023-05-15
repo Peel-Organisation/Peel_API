@@ -18,7 +18,7 @@ jobs:
         with:
           context: .
           push: true
-          file: ./Dockerfile
+          file: ./dockerfile
           tags: peelregistry/peel_api:latest
           build-args: |
             MONGO_DB_USER=${{ secrets.MONGO_DB_USER }}
