@@ -3,15 +3,15 @@
 Peel API is a RESTfull API that allows users of our mobile application (PEEL) to meet people without going through their physical appearance.
 
 ## Table of Contents
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Authentication](#authentication)
-- [CI/CD](#ci/cd)
-- [Docker](#docker)
-- [Usage](#usage)
-- [Examples](#examples)
-- [License](#license)
-- [Author](#author)
+- [Installation](#Installation)
+- [Configuration](#Configuration)
+- [Authentication](#Authentication)
+- [CI/CD](#CI/CD)
+- [Docker](#Docker)
+- [Usage](#Usage)
+- [Examples](#Examples)
+- [License](#License)
+- [Author](#Author)
 
 ## Installation
 Clone this repository on your local machine.
@@ -197,7 +197,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - [Damien DROZD](@DamienDrozd)
 - [Clément LANNERETONNE](@clement-lnr)
 - [Axel PELERIN](@apelerin)
-- [Océane KABASELE](@okabasele)
 - [PEEL Organisation - Teams](@PeelOrganisation)
 
 
