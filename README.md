@@ -1,7 +1,17 @@
 # Peel API
-
 ## Description
 Peel API is a RESTfull API that allows users of our mobile application (PEEL) to meet people without going through their physical appearance.
+
+## Table of Contents
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Authentication](#authentication)
+- [CI/CD](#ci/cd)
+- [Docker](#docker)
+- [Usage](#usage)
+- [Examples](#examples)
+- [License](#license)
+- [Author](#author)
 
 ## Installation
 Clone this repository on your local machine.
@@ -28,6 +38,16 @@ Before you can use the API, you must configure the following environment variabl
 - JWT_SECRET: Secret key used to sign the JWT tokens.
 - STACK: Stack used to run the API (development, production).
 - FIREBASE_SERVICE_ACCOUNT_KEY: Firebase service account key used to send notifications.
+
+## Authentication
+
+This API uses the json web token. To make protected requests, include the Authorization header with the value of the access token. This token is returned when you log and register in to the API.
+
+## CI/CD
+This project uses GitHub Actions to build and push a Docker image to Docker Hub. The image is then used to deploy the API on a EC2 instance on AWS.
+
+[![Build and Push Docker Image](https://github.com/Peel-Organisation/Peel_API/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/Peel-Organisation/Peel_API/actions/workflows/docker-image.yml)
+
 
 ## Docker
 
@@ -73,10 +93,6 @@ npm start
 Please refer to the [Routes File]("./src/routes") for more information about the available routes.
 
 Make sure to include the required authentication headers for protected routes.
-
-## Authentication
-
-This API uses the json web token. To make protected requests, include the Authorization header with the value of the access token. This token is returned when you log and register in to the API.
 
 ## Examples
 Here are some examples of requests and responses for the main routes of the API:
