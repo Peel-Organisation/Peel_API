@@ -15,19 +15,6 @@ exports.getUser = async (req, res, next) => {
   .catch(error => res.status(400).send(error));
 };
 
-exports.getOneUser = async (req, res, next) => {
-  User.findById(req.params.id)
-  .then(user => {
-    if (!user) {
-      return res.status(404).send({
-        message: "User Not found with id " + req.params.id,
-      });
-    }
-    res.send(user);
-  })
-  .catch(error => res.status(400).send(error));
-};
-
 exports.updateUser = async (req, res, next) => {
   User.findByIdAndUpdate(req.userToken.id, req.body)
   .populate('interests')
@@ -54,6 +41,9 @@ exports.deleteUser = async (req, res, next) => {
   .catch(error => res.status(400).send(error));
 };
 
+
+// ------------------ Admin routes
+
 exports.getUserAdmin = async (req, res, next) => {
   User.findById(req.params.id)
   .then(user => {
@@ -64,7 +54,7 @@ exports.getUserAdmin = async (req, res, next) => {
     }
     res.send(user);
   })
-  .catch(error => res.status(400).send(error));
+  .catch(error => res.status(404).send(error));
 };
 
 exports.updateUserAdmin = async (req, res, next) => {
@@ -79,7 +69,7 @@ exports.updateUserAdmin = async (req, res, next) => {
       res.send(userupdated);
     })
   })
-  .catch(error => res.status(400).send(error));
+  .catch(error => res.status(404).send(error));
 };
 
 exports.deleteUserAdmin = async (req, res, next) => {
@@ -91,23 +81,15 @@ exports.deleteUserAdmin = async (req, res, next) => {
     }
     res.send(user);
   })
-  .catch(error => res.status(400).send(error));
+  .catch(error => res.status(404).send(error));
 };
 
-exports.getAllUsers = async (req, res, next) => {
+exports.getAllUsersAdmin = async (req, res, next) => {
   User.find()
   .then(users => {
     res.send(users);
   })
-  .catch(error => res.status(400).send(error));
+  .catch(error => res.status(404).send(error));
 };
 
 
-exports.createUser = async (req, res, next) => {
-  const user = new User(req.body);
-  user.save()
-  .then(user => {
-    res.send(user);
-  })  
-  .catch(error => res.status(400).send(error));
-};
