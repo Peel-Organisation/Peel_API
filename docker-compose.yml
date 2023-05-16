@@ -1,0 +1,11 @@
+services:
+  app:
+    image: peel_api:latest
+    ports:
+      - 3001:3000
+    environment:
+      - MONGO_DB_USER=db_admin
+      - MONGO_DB_PASSWORD=CAgMfSg9e9FodKEZ
+      - PORT=3000
+      - JWT_SECRET=secret
+      - STACK=dev

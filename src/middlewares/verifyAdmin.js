@@ -1,7 +1,8 @@
 
 
 
-exports.verifyAdmin = (req, res, next) => {
+const verifyAdmin = (req, res, next) => {
+  console.log(req.userToken);
   if (!req.userToken.isAdmin) {
     return res.status('401').send({
       auth: false,
@@ -10,3 +11,5 @@ exports.verifyAdmin = (req, res, next) => {
   }
   next();
 };
+
+module.exports = verifyAdmin;
