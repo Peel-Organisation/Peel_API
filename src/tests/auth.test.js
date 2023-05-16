@@ -4,7 +4,6 @@ const app = require("../app");
 
 require('dotenv').config();
 
-// jest.useFakeTimers();
 
 let token = ""
 
@@ -15,11 +14,6 @@ beforeAll(async() => {
         `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@peeldb.xaoe2as.mongodb.net/?retryWrites=true&w=majority`,
     )
 });
-
-
-
-
-
 
 
 describe("POST /api/auth/login", () => {

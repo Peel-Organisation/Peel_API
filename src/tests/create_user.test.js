@@ -4,7 +4,6 @@ const app = require("../app");
 
 require('dotenv').config();
 
-// jest.useFakeTimers();
 
 let userToken = ""
 
