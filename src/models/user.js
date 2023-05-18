@@ -29,11 +29,11 @@ const userSchema = new mongoose.Schema({
   movie: {
     id: String,
     title: String,
-    images: {
+    image: {
       backdrop_path: String,
       poster_path: String,
     },
-    genres_ids: [
+    genre_ids: [
       {
         id: Number,
         name: String,

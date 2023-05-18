@@ -1,7 +1,10 @@
 const User = require('../models/user');
 const Conversation = require('../models/conversation');
 const moment = require('moment'); 
+const interest = require('../models/interest');
 const date = new Date();
+const Score = require('../compatibilityScore.json');
+const filterMultiplier = require('../compatibilityFilter.json');
 
 
 exports.getSwipeProfil = async (req, res, next) => {
@@ -21,31 +24,26 @@ exports.getSwipeProfil = async (req, res, next) => {
 */
 exports.getCompatibleProfil = async (req, res, next) => {
   try {
-    await User.findById(req.userToken.id)
-      .populate("position")
-      .populate("preferences")
+    const filters = req.body
+    console.log("filters : ", filters)
+    User.findById(req.userToken.id)
       .then(user => {
-        // const userPosition = user.position;
-        // console.log(userPosition);
-        // const maxDistance = userPreferences.searchRange * 1000;
+        
+
 
         const userPreferences = user.preferences;
         const minBirth = moment(date).subtract(userPreferences.age.min, 'years');
         const maxBirth = moment(date).subtract(userPreferences.age.max, 'years');
 
-        console.log("minAge : ", minBirth);
-        console.log("maxAge : ", maxBirth);
+         
 
 
         let age = (new Date() - new Date(user.birthday)) / (365.25 * 24 * 60 * 60 * 1000);
-        console.log("age : ", age);
-        console.log("user.birthday : ", user.birthday);
+
 
         // préférences sexuelles de l'utilisateur
         const userSexualOrientation = userPreferences.sexual_orientation;
-        console.log("userSexualOrientation : ", userSexualOrientation);
         const userGender = user.gender;
-        console.log("userGender : ", userGender);
 
         let sexeTab = []
         let orientationTab = []
@@ -85,32 +83,70 @@ exports.getCompatibleProfil = async (req, res, next) => {
         let likeTab = user.likes.map(like => {return like.userID})
 
 
+        
+
         User.find({
           _id : { 
             $nin: likeTab
           },
           birthday: {
             $gt: maxBirth,
-            $lt: minBirth
+            $lt: minBirth,
+            $exists: true
           },
           // "preferences.age.min": {
-          //   $lt: age
+          //   $lt: age,
+            // $exists: true
           // },
           // "preferences.age.max": {
-          //   $gt: age
+          //   $gt: age,
+            // $exists: true
           // },
           gender: {
-            $in: sexeTab
+            $in: sexeTab,
+            $exists: true
           },
           "preferences.sexual_orientation": {
-            $in: orientationTab
+            $in: orientationTab,
+            $exists: true
+          },
+          "firstName": {
+            $exists: true
+          },
+          "lastName": {
+            $exists: true 
+          },
+          "gif.image.url": {
+            $exists: true
+          },
+          "movie.image.poster_path": {
+            $exists: true 
+          },
+          "movie.title": {
+            $exists: true
+          },
+          // "music.image.url": {
+          //   $exists: true
+          // },
+          "questions": {
+            $exists: true
+          },
+          "interests": {
+            $exists: true,
+            $size: 5
+          },
+          "biographie": {
+            $exists: true
           }
-      })
+      },
+      [
+        "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake"
+      ]
+      )
       .then(profiles => {
         if (userSexualOrientation === "bisexual") {
           profiles = profiles.filter(profile => {
             if (profile.preferences.sexual_orientation == "bisexual") return true;
-
             switch (userGender) {
               case "Male":
                 if (profile.gender == "Male" && profile.preferences.sexual_orientation === "homo") return true;
@@ -125,8 +161,13 @@ exports.getCompatibleProfil = async (req, res, next) => {
             }
           });
         }
-        // console.log(profiles);
-        res.send(profiles);
+        let compatibilityTab = profiles.map(profile =>{
+          return calculateCompatibility(user, profile, filters)
+        })
+
+        compatibilityTab.sort(compareScore)
+        
+        res.send(compatibilityTab);
       })
       .catch(err => {
         res.status(500).send({
@@ -141,6 +182,60 @@ exports.getCompatibleProfil = async (req, res, next) => {
       })
   }
 };
+
+const compareScore = (user1, user2) => {
+  return user1.compatibilityScore - user2.compatibilityScore
+}
+
+const calculateCompatibility = (user1, user2, filters) => {
+  user2.compatibilityScore = 0
+  let multiplier = 1
+
+  //tri par gif 
+  if (user1?.gif?.title === user2?.gif?.title ) user2.compatibilityScore += Score?.gif?.title
+
+  //tri par interet
+  multiplier = 1
+  if (filters?.interest) multiplier = filterMultiplier.interest
+  user1?.interests?.forEach(interest => {
+    if (user2?.interests?.includes(interest)){
+      user2.compatibilityScore += (Score?.interest?.title * multiplier)
+    }
+  })
+
+  //tri par musique (a faire plus tard)
+  multiplier = 1
+  if (filters?.music) multiplier = filterMultiplier.music
+  // console.log("multiplier music : ", multiplier)
+  //tri par sport (a faire plus tard)
+  multiplier = 1
+  if (filters?.sport) multiplier = filterMultiplier.sport
+  // console.log("multiplier sport : ", multiplier)
+  //tri par film
+  multiplier = 1
+  if (filters.movie ) multiplier = filterMultiplier.movie
+  // console.log("multiplier movie : ", multiplier)
+  if (user1?.movie?.title === user2?.movie?.title){
+    user2.compatibilityScore += (Score?.movie?.title * multiplier)
+  } 
+  user1?.movie?.genres_ids?.forEach(genre => {
+    if (user2?.movie?.genres_ids?.includes(genre)){
+      console.log("movie")
+      user2.compatibilityScore += (Score?.movie?.genre * multiplier)
+    }
+  });
+  
+  // tri par jeu vidéo (a faire plus tard)
+  multiplier = 1
+  if (filters.games) multiplier = filterMultiplier.games
+  // console.log("multiplier games : ", multiplier)
+
+  //Ajout d'aléatoire pour casser l'algorithme
+  user2.compatibilityScore += Math.floor(Math.random() * Score.random.value);
+
+  console.log(user2.compatibilityScore)
+  return user2
+}
 
 
 /*
