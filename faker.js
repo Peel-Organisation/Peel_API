@@ -6,7 +6,6 @@ const axios = require('axios');
 // import { faker } from '@faker-js/faker/locale/de';
 
 
-
 const createRandomUser = () => {
   return {
     email: faker.internet.email(),
