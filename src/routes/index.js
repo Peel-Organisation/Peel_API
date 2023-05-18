@@ -16,7 +16,9 @@ router.use('/interest', interestRoutes);
 router.use('/match', matchRoutes);
 router.use('/question', questionRoutes);
 router.use('/user', userRoutes);
-
+router.get('/', (req, res) => {
+    res.send('Welcome to the API');
+});
 
 
 module.exports = router;
