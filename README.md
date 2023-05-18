@@ -30,7 +30,7 @@ Configure the required environment variables by creating a .env file at the root
 
 ## Configuration
 
-Before you can use the API, you must configure the following environment variables:
+If you want to run the API locally, you must configure the following environment variables:
 
 - MONGO_DB_USER: Username for the MongoDB database.
 - MONGO_DB_PASSWORD: Password for the MongoDB database.
@@ -38,6 +38,7 @@ Before you can use the API, you must configure the following environment variabl
 - JWT_SECRET: Secret key used to sign the JWT tokens.
 - STACK: Stack used to run the API (development, production).
 - FIREBASE_SERVICE_ACCOUNT_KEY: Firebase service account key used to send notifications.
+
 
 ## Authentication
 
@@ -71,6 +72,14 @@ OR
 
 ```shell
 docker-compose up
+```
+
+OR 
+
+4. You can also use the API on the EC2 instance at the link below:
+
+```shell
+http://ec2-13-38-128-96.eu-west-3.compute.amazonaws.com/
 ```
 
 ## Usage
