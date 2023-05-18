@@ -10,7 +10,7 @@
     "faker-update": "nodemon ./faker-update.js",
     "build": "babel ./src -d build ",
     "test": "jest --testTimeout=5000",
-    "artillery-local": "set ENV=http://localhost:3000/api&& artillery run -k --dotenv .env ./src/tests/Artillery/testing_api_charge.yml",
+    "artillery-local": "set ENV=http://localhost:3001/api&& artillery run -k --dotenv .env ./src/tests/Artillery/testing_api_charge.yml",
     "artillery-prod": "set ENV=http://ec2-13-38-128-96.eu-west-3.compute.amazonaws.com/api&& artillery run -k --dotenv .env ./src/tests/Artillery/testing_api_charge.yml"
   },
   "author": "Peel Organisation",
