@@ -1,0 +1,20 @@
+config:
+  defaults: 
+    headers:
+      content-type: "applocation/json"
+  target: "{{$processEnvironnement.ENV}}"
+  phases:
+
+scenarios : 
+  -name: "login and get userList"
+
+      - post: 
+          url: "auth/login"
+          json : 
+            email : "{{$processEnvironnement.USER_EMAIL}}"
+            password: "{{$processEnvironnement.USER_PASSWORD}}"
+          capture:
+            - json: "$.token"
+              as: "token"
+      - get:
+          url: "/match/swipeProfil"
