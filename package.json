@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/index.js",
     "start": "node ./build/index.js",
-    "test": "jest --testTimeout=5000",
     "faker": "nodemon ./faker.js",
     "faker-update": "nodemon ./faker-update.js",
-    "build": "babel ./src -d build "
+    "build": "babel ./src -d build ",
+    "test": "jest --testTimeout=5000",
+    "artillery-local": "set ENV=http://localhost:3001/api&& artillery run -k --dotenv .env ./src/tests/Artillery/testing_api_charge.yml",
+    "artillery-prod": "set ENV=http://ec2-13-38-128-96.eu-west-3.compute.amazonaws.com/api&& artillery run -k --dotenv .env ./src/tests/Artillery/testing_api_charge.yml"
   },
   "author": "Peel Organisation",
   "license": "ISC",
@@ -40,6 +42,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.21.5",
     "@faker-js/faker": "^7.6.0",
+    "artillery": "^2.0.0-32",
     "babel-cli": "^6.26.0",
     "babel-preset": "^1.1.7",
     "babel-preset-env": "^1.7.0",
