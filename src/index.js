@@ -3,7 +3,6 @@ const app = require('./app');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -19,20 +18,13 @@ const normalizePort = val => {
 const port = normalizePort(process.env.PORT || '3002');
 app.set('port', port); 
 
-
-
-
 mongoose.set('strictQuery', false);
 
 mongoose.connect(
-  `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@peeldb.xaoe2as.mongodb.net/?retryWrites=true&w=majority`,
+  `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_URL}/?retryWrites=true&w=majority`,
 ).then(() => {
   console.log('successfully connect to database');
 }).catch((err) => console.log(err));
-
-
-
-
 
 const errorHandler = error => {
   if (error.syscall !== 'listen') {
@@ -60,8 +52,5 @@ server.on('listening', () => {
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   console.log('Listening on ' + bind);
 });
-
-
-
 
 server.listen(port);

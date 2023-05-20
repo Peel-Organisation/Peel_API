@@ -1,0 +1,30 @@
+config:
+  defaults: 
+    headers:
+      Content-Type: "application/json"
+  target: "{{$processEnvironment.ENV}}"
+  phases:
+    - duration: 10
+      arrivalRate: 5
+      name: Warm up
+    - duration: 30
+      arrivalRate: 5
+      rampTo: 50
+      name: Ramp up load
+    - duration: 60
+      arrivalRate: 50
+      name: Sustained load
+
+scenarios : 
+  - name: "login and get userList"
+    flow:
+      - post: 
+          url: "/auth/login"
+          json : 
+            email : "{{$processEnvironment.USER_EMAIL}}"
+            password: "{{$processEnvironment.USER_PASSWORD}}"
+          capture:
+            - json: "$.token"
+              as: "token"
+      - get:
+          url: "/match/swipeProfil"
