@@ -131,6 +131,28 @@ const userSchema = new mongoose.Schema({
       nb_connexion: { type: Number, default: 0 },
     },
   ],
+  profileModules: {
+    mainElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "gif",
+    },
+    secondaryElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "biographie",
+    },
+    tertiaryElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "interests",
+    },
+    quaternaryElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "questions",
+    },
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
