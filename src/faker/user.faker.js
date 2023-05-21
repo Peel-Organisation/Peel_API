@@ -1,5 +1,6 @@
 const { faker } = require('@faker-js/faker');
 faker.setLocale('fr')
+require('dotenv').config();
 const User = require("../models/user.js");
 const axios = require('axios');
 const { getRandomGif, getRandomMovie, updateInterest, getCustumBio } = require('./utils.js');
