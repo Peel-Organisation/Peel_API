@@ -1,5 +1,3 @@
-const { faker } = require('@faker-js/faker');
-faker.setLocale('fr')
 const interest_list = require('./interest_list.json')
 require('dotenv').config();
 

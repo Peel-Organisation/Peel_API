@@ -204,5 +204,31 @@ function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
 } 
 
+const getRandomMusic = async (user) => {
+    try {
+        let searchText = "test"
+        let page = Math.floor(Math.random() * 500) + 1;
+        const url = `https://${process.env.GENIUS_API_PATH}search?q=${searchText}&page=${page}`;
+        console.log("url : ", url)
+        console.log("authorization : ", `Bearer ${process.env.GENIUS_API_TOKEN}`)
+        setLoading(true);
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+            Authorization: `Bearer ${GENIUS_API_TOKEN}`,
+            },
+        });
+        const dataJson = await response.json();
+        let status_code = response.status;
+        if (status_code !== 200) {
+            throw new Error(dataJson.message);
+        }
+       
+    }
+    catch (error) {
+        console.log("error : ", error);
+    }   
+}
 
-module.exports = { getRandomGif, getRandomMovie, updateInterest, getCustumBio }
+
+module.exports = { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic }

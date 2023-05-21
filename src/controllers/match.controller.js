@@ -207,6 +207,15 @@ const calculateCompatibility = (user1, user2, filters) => {
   multiplier = 1
   if (filters?.music) multiplier = filterMultiplier.music
   // console.log("multiplier music : ", multiplier)
+  if (user1?.music?.title === user2?.music?.title){
+    user2.compatibilityScore += (Score?.music?.title * multiplier)
+  } 
+  if (user1?.music?.artist?.name === user2?.music?.artist?.name){
+    user2.compatibilityScore += (Score?.music?.artist * multiplier)
+  }
+  if (user1?.music?.album?.name === user2?.music?.album?.title){
+    user2.compatibilityScore += (Score?.music?.album * multiplier)
+  }
   //tri par sport (a faire plus tard)
   multiplier = 1
   if (filters?.sport) multiplier = filterMultiplier.sport
