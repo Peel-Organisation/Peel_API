@@ -16,7 +16,7 @@ exports.getUser = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-  User.findByIdAndUpdate(req.userToken.id, req.body)
+  User.findByIdAndUpdate(req.userToken.id, req.body, {new: true})
   .populate('interests')
   .then((user) => {
     if (!user) {
