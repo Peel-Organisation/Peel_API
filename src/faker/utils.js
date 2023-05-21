@@ -1,6 +1,5 @@
-const { getInterest } = require("../controllers/interest.controller");
-const {execSync} = require('child_process');
-const interest = require("../models/interest");
+
+const { fakerFR  } = require('@faker-js/faker');
 
 
 
@@ -206,16 +205,13 @@ function delay(time) {
 
 const getRandomMusic = async (user) => {
     try {
-        let searchText = "test"
-        let page = Math.floor(Math.random() * 500) + 1;
-        const url = `https://${process.env.GENIUS_API_PATH}search?q=${searchText}&page=${page}`;
+        let searchText = fakerFR.music.songName()
+        const url = `${process.env.GENIUS_API_PATH}search?q=${searchText}&page=1`;
         console.log("url : ", url)
-        console.log("authorization : ", `Bearer ${process.env.GENIUS_API_TOKEN}`)
-        setLoading(true);
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-            Authorization: `Bearer ${GENIUS_API_TOKEN}`,
+            Authorization: `Bearer ${process.env.GENIUS_API_TOKEN}`,
             },
         });
         const dataJson = await response.json();
@@ -223,7 +219,19 @@ const getRandomMusic = async (user) => {
         if (status_code !== 200) {
             throw new Error(dataJson.message);
         }
-       
+        console.log("dataJson : ", dataJson.response.hits[0].result)
+        let music = dataJson.response.hits[0].result;
+        if (music != undefined && user != undefined) {
+            user.music = {
+                id: music?.id,
+                title: music?.title,
+                image: music?.song_art_image_url,
+                artist: {id: music?.primary_artist?.id, name: music?.primary_artist?.name, image: music?.primary_artist?.image_url},
+                album: {id: music?.album?.id, name: music?.album?.name, image: music?.album?.cover_art_url}
+            }
+            console.log("user : ", user.music)
+            return user;
+        }
     }
     catch (error) {
         console.log("error : ", error);
