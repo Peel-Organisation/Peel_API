@@ -40,7 +40,21 @@ const userSchema = new mongoose.Schema({
       },
     ],
   },
-  favouriteMusic: String,
+  music: {
+    id: String,
+    title: String,
+    artist: { 
+      id: String, 
+      name: String, 
+      image: String 
+    },
+    image: String,  
+    album: { 
+      id: String, 
+      title: String, 
+      image: String 
+    },
+  },
   questions: [
     {
       question: {
