@@ -74,5 +74,6 @@ exports.getUserByToken = async (req, res, next) => {
     message: "User " + req.userToken.id + " successfully logged in",
     auth: true,
     token: req.headers["authorization"],
+    userId: req.userToken.id,
   });
 };

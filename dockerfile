@@ -1,14 +1,27 @@
-FROM node:alpine as base
+# Author: Peel-Organisation
+# Construction step
+FROM node:alpine as build
 
 WORKDIR /app
 
-COPY . .
+COPY package*.json ./
+RUN npm install
 
-RUN rm -rf node_modules && npm install
+COPY . .
 
 RUN npm run build
 
-# RUN rm -rf ./src
+# Production step
+FROM node:alpine as production
 
-EXPOSE 3001
+WORKDIR /app
+
+COPY --from=build /app/build ./build
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/.firebaserc ./.firebaserc
+COPY --from=build /app/firebase.json ./firebase.json
+
+RUN npm install
+
+EXPOSE 3000
 CMD ["npm", "run", "start"]
