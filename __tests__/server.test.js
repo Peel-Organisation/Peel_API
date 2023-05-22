@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app");
+const app = require("../src/app");
 const mongoose = require("mongoose");
 require('dotenv').config();
 mongoose.set('strictQuery', false);
@@ -7,7 +7,7 @@ mongoose.set('strictQuery', false);
 
 beforeEach(() => {
     mongoose.connect(
-        `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@peeldb.xaoe2as.mongodb.net/?retryWrites=true&w=majority`,
+      `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}${process.env.MONGO_URL}/?retryWrites=true&w=majority`,
     )
 });
 
