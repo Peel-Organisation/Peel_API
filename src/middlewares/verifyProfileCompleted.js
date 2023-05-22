@@ -43,16 +43,16 @@ const verifyAdmin = (req, res, next) => {
                 message: "user gender not found",
                 });
             }
-            // if (user?.movie?.id === null || user?.movie?.id === undefined || user?.movie?.id === "") {
-            //     return res.status(400).send({
-            //     message: "user movie not found",        
-            //     });
-            // }
-            // if (user?.music?.id === null || user?.music?.id === undefined || user?.music?.id === "") {
-            //     return res.status(400).send({
-            //     message: "user music not found",
-            //     });
-            // }
+            if (user?.movie?.id === null || user?.movie?.id === undefined || user?.movie?.id === "") {
+                return res.status(400).send({
+                message: "user movie not found",        
+                });
+            }
+            if (user?.music?.id === null || user?.music?.id === undefined || user?.music?.id === "") {
+                return res.status(400).send({
+                message: "user music not found",
+                });
+            }
             if (user.interests === null || user.interests === undefined || user.interests.length === 0) {
                 return res.status(400).send({
                 message: "user interests not found",    

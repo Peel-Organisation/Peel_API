@@ -30,7 +30,6 @@ const getRandomGif = async (user) => {
                 "hash": gif?.images?.original?.hash
             }
         }
-        // console.log("user : ", user.gif)
         return user;
     }
     catch (error) {
@@ -72,7 +71,6 @@ const getRandomMovie = async (user) => {
                 },
                 "genre_ids": genres_ids
             }
-            // console.log("user : ", user.movie)
             return user;
         }
     }
@@ -108,7 +106,6 @@ const getInterestList = async (user) => {
         if (status_code !== 200) {
             throw new Error(dataJson.message);
         }
-        // console.log("dataJson : ", dataJson)
         let interest_list = dataJson;
         return interest_list;
     }
@@ -130,7 +127,6 @@ const updateInterest = async (user) => {
             }
         }
         user.interests = user_interest;
-        // console.log("user : ", user.interest)
         return user;
     }
     catch (error) {
@@ -159,7 +155,6 @@ const getCustumBio = async (user) => {
     let interest = user.interest.map(interest => interest.name).join(', ');
     prompt += `Intérêts : ${interest}\n`;
     prompt += `Film préféré : ${user.movie.title}\n`;
-    // prompt += `Musique préférée : ${user.music.title}\n`;
 
     console.log("prompt : ", prompt)
 
@@ -179,7 +174,6 @@ const getCustumBio = async (user) => {
         })
     };
 
-    // console.log("requestOptions : ", requestOptions)
     
 
 

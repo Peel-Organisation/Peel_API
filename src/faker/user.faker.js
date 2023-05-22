@@ -1,10 +1,7 @@
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
-const User = require("../models/user.js");
-const axios = require('axios');
 const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules } = require('./utils.js');
 
-// import { faker } from '@faker-js/faker/locale/de';
 
 const addUser = async (user) => {
     try {
@@ -80,7 +77,6 @@ const createRandomUser = async () => {
     { question : "63cdcc53dae4c0f0b9abe873",
       answer: faker.lorem.sentence()
     }],
-    // gif_link: String,
     preferences: {age: {min: minAgeInteval, max: maxAgeInteval}, sexual_orientation: ["hetero", "homo", "bi"][getRandomInt(3)] },
     biographie: person.bio(),
     isFake: true
@@ -104,9 +100,6 @@ const createRandomUser = async () => {
       })
     })
   })
-
-  // user = await getCustumBio(user)
-
   return user
 }
 
