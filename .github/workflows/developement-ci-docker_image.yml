@@ -1,3 +1,4 @@
+#author: @KevOneRedOne
 name: Build and Push Docker Image - DEVELOPMENT
 
 on:
@@ -41,8 +42,8 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
-            tag_name: ${{ github.run_number }} - ${{ github.sha }}
-            release_name: Release ${{ github.run_number }} - ${{ steps.date.outputs.date }} - ${{ steps.sha.outputs.sha }}
+            tag_name: ${{ github.sha }}
+            release_name: Release ${{ github.run_number }} - ${{ steps.date.outputs.date }} - ${{ github.sha }}
             body: |
               This release is an automated release created by GitHub Actions.
   
