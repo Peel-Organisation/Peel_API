@@ -25,7 +25,7 @@ describe("POST /api/auth/register", () => {
     test("should return user token", done => {
         request(app).post("/api/auth/register")
         .send({
-            email: "tester@tester",
+            email: "teste@teste",
             password: "testtest"
         }).then(res => {
             expect(res.statusCode).toBe(200);
@@ -46,13 +46,22 @@ describe("POST /api/auth/register", () => {
         });
     }
     );
+
+    
 });
 
-describe("GET /api/match/getSwipeProfilUser", () => {
+describe("POST /api/match/getSwipeProfilUser", () => {
     test("should return user list", done => {
         request(app)
-        .get("/api/match/getSwipeProfilUser")
+        .post("/api/match/getSwipeProfilUser")
         .set({"authorization" : userToken})
+        .send({
+            "interest" : false,
+            "music":false,
+            "sport":false,
+            "movie":false,
+            "games":false
+        })
         .then(res => {
             expect(res.statusCode).toBe(200);
             expect(res.body).toBeInstanceOf(Array);
@@ -61,6 +70,7 @@ describe("GET /api/match/getSwipeProfilUser", () => {
     }
     );
 });
+
 
 describe("DELETE /api/user/useradmin", () => {
 

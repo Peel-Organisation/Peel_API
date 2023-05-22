@@ -8,11 +8,9 @@ import User from "../models/user";
 
 
 const verifyAdmin = (req, res, next) => {
-  console.log(req.userToken);
     try {
         User.findById(req.userToken.id)
         .then(user => {
-            console.log(user.movie);
             if (!user) {
                 return res.status(404).send({
                 message: "User Not found",

@@ -11,7 +11,7 @@ mongoose.set('strictQuery', false);
 
 beforeAll(async() => {
     await mongoose.connect(
-        `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}${process.env.MONGO_DB_URL}/?retryWrites=true&w=majority`,
+        `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}${process.env.MONGO_URL}/?retryWrites=true&w=majority`,
     )
 });
 
