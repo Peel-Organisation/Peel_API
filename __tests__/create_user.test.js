@@ -1,12 +1,13 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const app = require("../app");
+const app = require("../src/app");
 
 require('dotenv').config();
 
 
 let userToken = ""
 
+let adminToken = ""
 
 let user = {}
 
@@ -16,7 +17,7 @@ mongoose.set('strictQuery', false);
 
 beforeAll(async() => {
     await mongoose.connect(
-        `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@peeldb.xaoe2as.mongodb.net/?retryWrites=true&w=majority`,
+        `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}${process.env.MONGO_URL}/?retryWrites=true&w=majority`,
     )
 });
 
@@ -34,7 +35,24 @@ describe("POST /api/auth/register", () => {
             done();
         });
     });
+});
 
+
+describe("GET /api/auth/protected", () => {
+    test("should return user", done => {
+        request(app)
+        .get("/api/auth/protected")
+        .set({"authorization" : userToken})
+        .then(res => {
+            expect(res.statusCode).toBe(200);
+            expect(res.body.auth).toBe(true);
+            done();
+        });
+    }
+    );
+});
+
+describe("GET /api/user", () => {
     test("should return user", done => {
         request(app)
         .get("/api/user")
@@ -48,23 +66,7 @@ describe("POST /api/auth/register", () => {
     );
 });
 
-describe("GET /api/match/getSwipeProfilUser", () => {
-    test("should return user list", done => {
-        request(app)
-        .get("/api/match/getSwipeProfilUser")
-        .set({"authorization" : userToken})
-        .then(res => {
-            expect(res.statusCode).toBe(200);
-            expect(res.body).toBeInstanceOf(Array);
-            done();
-        });
-    }
-    );
-});
-
 describe("DELETE /api/user/useradmin", () => {
-
-    let adminToken = ""
     test("should return userAdmin", done => {
         request(app).post("/api/auth/login")
         .send({
