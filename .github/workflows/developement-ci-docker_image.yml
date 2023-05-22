@@ -27,17 +27,26 @@ jobs:
           file: ./dockerfile
           tags: peelregistry/peel_api:latest
 
+      - name: Get the SHA of the latest commit
+        id: sha
+        run: echo ::set-output name=sha::$(git rev-parse HEAD)
+  
+      - name: Set current date
+        id: date
+        run: echo ::set-output name=date::$(date +'%Y-%m-%d')
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
-          tag_name: ${{ github.run_number }} - ${{ github.sha }}
-          release_name: Release ${{ github.run_number }} - ${{ github.event.repository.updated_at.split('T')[0] }} - ${{ github.sha }}
-          body: |
-            This is an automated release created by GitHub Actions.
-            Commit messages:
-            ${{ join(github.event.commits.*.message, '\n') }}
-          draft: false
-          prerelease: false
+            tag_name: ${{ github.run_number }} - ${{ github.sha }}
+            release_name: Release ${{ github.run_number }} - ${{ steps.date.outputs.date }} - ${{ steps.sha.outputs.sha }}
+            body: |
+              This release is an automated release created by GitHub Actions.
+  
+              Commit messages:
+                  ${{ join(github.event.commits.*.message, '\n') }}
+            draft: false
+            prerelease: false
