@@ -23,6 +23,7 @@ exports.getSwipeProfil = async (req, res, next) => {
   * @access Private
 */
 exports.getCompatibleProfil = async (req, res, next) => {
+  console.log("test")
   try {
     const filters = req.body
     User.findById(req.userToken.id)
