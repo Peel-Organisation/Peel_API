@@ -25,7 +25,6 @@ exports.getSwipeProfil = async (req, res, next) => {
 exports.getCompatibleProfil = async (req, res, next) => {
   try {
     const filters = req.body
-    console.log("filters : ", filters)
     User.findById(req.userToken.id)
       .then(user => {
         
@@ -77,8 +76,6 @@ exports.getCompatibleProfil = async (req, res, next) => {
 
 
         // retirer les utilisateurs déja likés
-
-        console.log("user Likes : ", user.likes)
 
         let likeTab = user.likes.map(like => {return like.userID})
 
@@ -206,7 +203,6 @@ const calculateCompatibility = (user1, user2, filters) => {
   //tri par musique (a faire plus tard)
   multiplier = 1
   if (filters?.music) multiplier = filterMultiplier.music
-  // console.log("multiplier music : ", multiplier)
   if (user1?.music?.title === user2?.music?.title){
     user2.compatibilityScore += (Score?.music?.title * multiplier)
   } 
@@ -219,17 +215,14 @@ const calculateCompatibility = (user1, user2, filters) => {
   //tri par sport (a faire plus tard)
   multiplier = 1
   if (filters?.sport) multiplier = filterMultiplier.sport
-  // console.log("multiplier sport : ", multiplier)
   //tri par film
   multiplier = 1
   if (filters.movie ) multiplier = filterMultiplier.movie
-  // console.log("multiplier movie : ", multiplier)
   if (user1?.movie?.title === user2?.movie?.title){
     user2.compatibilityScore += (Score?.movie?.title * multiplier)
   } 
   user1?.movie?.genres_ids?.forEach(genre => {
     if (user2?.movie?.genres_ids?.includes(genre)){
-      console.log("movie")
       user2.compatibilityScore += (Score?.movie?.genre * multiplier)
     }
   });
@@ -237,12 +230,10 @@ const calculateCompatibility = (user1, user2, filters) => {
   // tri par jeu vidéo (a faire plus tard)
   multiplier = 1
   if (filters.games) multiplier = filterMultiplier.games
-  // console.log("multiplier games : ", multiplier)
 
   //Ajout d'aléatoire pour casser l'algorithme
   user2.compatibilityScore += Math.floor(Math.random() * Score.random.value);
 
-  console.log(user2.compatibilityScore)
   return user2
 }
 
@@ -286,7 +277,6 @@ exports.PutLikeDislike = async (req, res, next) => {
       });
     }
 
-    console.log("currentUser : ", currentUser.likes)
 
     const isAlreadyLikedCurrent = currentUser.likes.find((like) => like?.userID?.toString() === userTarget?._id?.toString());
 
