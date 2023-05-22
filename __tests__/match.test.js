@@ -47,6 +47,10 @@ describe("POST /api/auth/register", () => {
     }
     );
 
+    
+});
+
+describe("POST /api/match/getSwipeProfilUser", () => {
     test("should return user list", done => {
         request(app)
         .post("/api/match/getSwipeProfilUser")
@@ -66,7 +70,6 @@ describe("POST /api/auth/register", () => {
     }
     );
 });
-
 
 
 describe("DELETE /api/user/useradmin", () => {
