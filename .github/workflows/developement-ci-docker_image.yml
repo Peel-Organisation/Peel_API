@@ -26,3 +26,14 @@ jobs:
           push: true
           file: ./dockerfile
           tags: peelregistry/peel_api:latest
+
+      - name: Create GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body: |
+            This is an automated release created by GitHub Actions.
+          draft: false
+          prerelease: false
