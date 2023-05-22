@@ -62,12 +62,13 @@ const getRandomMovie = async (user) => {
                 name: genre?.name|| '',
                 };
             });
+            const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
             user.movie = {
                 id: movie?.id,
                 title: movie?.title,
-                image: {
-                    "backdrop_path": movie?.backdrop_path,
-                    "poster_path": movie?.poster_path
+                images: {
+                    "backdrop_path": imageBaseUrl+movie?.backdrop_path,
+                    "poster_path": imageBaseUrl+movie?.poster_path
                 },
                 "genre_ids": genres_ids
             }
@@ -128,7 +129,7 @@ const updateInterest = async (user) => {
                 user_interest.push(interest);
             }
         }
-        user.interest = user_interest;
+        user.interests = user_interest;
         // console.log("user : ", user.interest)
         return user;
     }
@@ -219,24 +220,56 @@ const getRandomMusic = async (user) => {
         if (status_code !== 200) {
             throw new Error(dataJson.message);
         }
-        console.log("dataJson : ", dataJson.response.hits[0].result)
         let music = dataJson.response.hits[0].result;
-        if (music != undefined && user != undefined) {
-            user.music = {
-                id: music?.id,
-                title: music?.title,
-                image: music?.song_art_image_url,
-                artist: {id: music?.primary_artist?.id, name: music?.primary_artist?.name, image: music?.primary_artist?.image_url},
-                album: {id: music?.album?.id, name: music?.album?.name, image: music?.album?.cover_art_url}
-            }
-            console.log("user : ", user.music)
-            return user;
-        }
+       const url2 = `${process.env.GENIUS_API_PATH}songs/${music.id}?text_format=plain&`;
+        const response2 = await fetch(url2, {
+            method: 'GET',
+            headers: {
+            Authorization: `Bearer ${process.env.GENIUS_API_TOKEN}`,
+            },
+        });
+        const data = await response2.json();
+        let music2 = data.response.song
+        console.log("user : ", user)
+        user.music = {
+            id: music2.id,
+            title: music2.title,
+            image: music2.song_art_image_thumbnail_url,  
+            artist: { id: music2.primary_artist.id, name: music2.primary_artist.name, image: music2.primary_artist.image_url },
+            album: { id: music2.album.id, title: music2.album.name, image: music2.album.cover_art_url } ,
+        };
+        console.log("user music : ", user.music)
+        return user;
     }
     catch (error) {
         console.log("error : ", error);
     }   
 }
 
+const getRandomModules = async (user) => {
+    try {
+        let modules = ["gif", "movie", "music", "biographie", "interests", "questions"];
+        let user_modules = [];
+        for (let i = 0; i < 4; i++) {
+            let module = modules[Math.floor(Math.random() * modules.length)];
+            if (user_modules.includes(module)) {
+                i--;
+            } else {
+                user_modules.push(module);
+            }
+        }
+        user.profileModules = {};
+        user.profileModules.mainElement = user_modules[0];
+        user.profileModules.secondaryElement = user_modules[1];
+        user.profileModules.tertiaryElement = user_modules[2];
+        user.profileModules.quaternaryElement = user_modules[3];
+        console.log("user : ", user.profileModules)
+        return user;
+    }
+    catch (error) {
+        console.log("error : ", error);
+    }
+}
 
-module.exports = { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic }
+
+module.exports = { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules }

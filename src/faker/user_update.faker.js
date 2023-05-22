@@ -1,6 +1,6 @@
 const { fakerFR  } = require('@faker-js/faker');
 require('dotenv').config();
-const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic } = require('./utils.js');
+const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules } = require('./utils.js');
 
 const faker = fakerFR
 
@@ -85,8 +85,12 @@ const updateUserList = async () => {
             getRandomGif(user).then((user) => {
                 getRandomMovie(user).then((user) => {
                     updateInterest(user).then((user) => {
-                        getRandomMusic(user).then((user) => {
-
+                            getRandomModules(user).then((user) => {
+                                getRandomMusic(user).then((user) => {
+                                // updateUser(user).then((user) => {
+                                    console.log("user updated : ", user)
+                                // })
+                            })
                         })
                     })
                 })

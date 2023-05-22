@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   movie: {
     id: String,
     title: String,
-    image: {
+    images: {
       backdrop_path: String,
       poster_path: String,
     },
@@ -43,12 +43,12 @@ const userSchema = new mongoose.Schema({
   music: {
     id: String,
     title: String,
+    image: String,  
     artist: { 
       id: String, 
       name: String, 
       image: String 
     },
-    image: String,  
     album: { 
       id: String, 
       title: String, 
