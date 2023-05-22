@@ -47,7 +47,8 @@ This API uses the json web token. To make protected requests, include the Author
 ## CI/CD
 This project uses GitHub Actions to build and push a Docker image to Docker Hub. The image is then used to deploy the API on a EC2 instance on AWS.
 
-[![Build and Push Docker Image](https://github.com/Peel-Organisation/Peel_API/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/Peel-Organisation/Peel_API/actions/workflows/docker-image.yml)
+[![Build and Push Docker Image - DEVELOPMENT](https://github.com/Peel-Organisation/Peel_API/actions/workflows/developement-ci-docker_image.yml/badge.svg)](https://github.com/Peel-Organisation/Peel_API/actions/workflows/developement-ci-docker_image.yml)
+[![Build and Push Docker Image - MAIN](https://github.com/Peel-Organisation/Peel_API/actions/workflows/main-ci-docker_image.yml/badge.svg)](https://github.com/Peel-Organisation/Peel_API/actions/workflows/main-ci-docker_image.yml)
 
 
 ## Docker
