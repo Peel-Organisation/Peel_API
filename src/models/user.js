@@ -9,10 +9,10 @@ const userSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
   birthday: Date,
   gender: String,
-  position: {
-    longitude: Number,
-    latitude: Number,
-  },
+  // position: {
+  //   longitude: Number,
+  //   latitude: Number,
+  // },
   gif: {
     id: String,
     url: String,
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
       backdrop_path: String,
       poster_path: String,
     },
-    genres_ids: [
+    genre_ids: [
       {
         id: Number,
         name: String,
@@ -43,12 +43,12 @@ const userSchema = new mongoose.Schema({
   music: {
     id: String,
     title: String,
+    image: String,  
     artist: { 
       id: String, 
       name: String, 
       image: String 
     },
-    image: String,  
     album: { 
       id: String, 
       title: String, 

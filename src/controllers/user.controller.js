@@ -57,6 +57,20 @@ exports.getUserAdmin = async (req, res, next) => {
   .catch(error => res.status(404).send(error));
 };
 
+exports.addUserAdmin = async (req, res, next) => {
+  if (req.body.email === undefined) {
+    return res.status(400).send({
+      message: "email is required",
+    });
+  }
+  new User(req.body).save().then((user) => {
+    res.send({
+      message: "user " + user._id + " successfully added",
+      user: user,
+    });
+  });
+};
+
 exports.updateUserAdmin = async (req, res, next) => {
   User.findByIdAndUpdate(req.params.id, req.body)
   .then((user) => {
