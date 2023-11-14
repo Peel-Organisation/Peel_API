@@ -9,10 +9,10 @@ const userSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
   birthday: Date,
   gender: String,
-  position: {
-    longitude: Number,
-    latitude: Number,
-  },
+  // position: {
+  //   longitude: Number,
+  //   latitude: Number,
+  // },
   gif: {
     id: String,
     url: String,
@@ -33,14 +33,28 @@ const userSchema = new mongoose.Schema({
       backdrop_path: String,
       poster_path: String,
     },
-    genres_ids: [
+    genre_ids: [
       {
         id: Number,
         name: String,
       },
     ],
   },
-  favouriteMusic: String,
+  music: {
+    id: String,
+    title: String,
+    image: String,  
+    artist: { 
+      id: String, 
+      name: String, 
+      image: String 
+    },
+    album: { 
+      id: String, 
+      title: String, 
+      image: String 
+    },
+  },
   questions: [
     {
       question: {
@@ -117,6 +131,28 @@ const userSchema = new mongoose.Schema({
       nb_connexion: { type: Number, default: 0 },
     },
   ],
+  profileModules: {
+    mainElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "gif",
+    },
+    secondaryElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "biographie",
+    },
+    tertiaryElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "interests",
+    },
+    quaternaryElement: {
+      type: String,
+      enum: ["gif", "movie", "music", "biographie", "interests", "questions"],
+      default: "questions",
+    },
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

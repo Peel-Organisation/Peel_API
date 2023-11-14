@@ -16,7 +16,7 @@ exports.getUser = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-  User.findByIdAndUpdate(req.userToken.id, req.body)
+  User.findByIdAndUpdate(req.userToken.id, req.body, {new: true})
   .populate('interests')
   .then((user) => {
     if (!user) {
@@ -55,6 +55,20 @@ exports.getUserAdmin = async (req, res, next) => {
     res.send(user);
   })
   .catch(error => res.status(404).send(error));
+};
+
+exports.addUserAdmin = async (req, res, next) => {
+  if (req.body.email === undefined) {
+    return res.status(400).send({
+      message: "email is required",
+    });
+  }
+  new User(req.body).save().then((user) => {
+    res.send({
+      message: "user " + user._id + " successfully added",
+      user: user,
+    });
+  });
 };
 
 exports.updateUserAdmin = async (req, res, next) => {
