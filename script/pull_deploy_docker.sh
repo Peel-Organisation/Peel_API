@@ -5,6 +5,17 @@ IMAGE_NAME="peelregistry/peel_api:latest"
 CONTAINER_NAME="peel_api"
 COMPOSE_FILE="docker-compose.yml"
 LATEST_IMAGE_ID=$(docker image inspect -f '{{.Id}}' $IMAGE_NAME 2>/dev/null)
+IMAGE_WITHOUT_TAG=$(docker images | grep $IMAGE_NAME | awk '{print $3}')
+
+# Check Docker images with the tag "<none>"
+if [ -n "$IMAGE_WITHOUT_TAG" ]; then
+    for image_id in $IMAGE_WITHOUT_TAG; do
+        docker rmi $image_id
+    done
+    echo "Docker images with the tag '<none>' deleted."
+else
+    echo "No image with the tag '<none>' found."
+fi
 
 # Check if the docker-compose.yml file exists
 if [ ! -f "$COMPOSE_FILE" ]; then
