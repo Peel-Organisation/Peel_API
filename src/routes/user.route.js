@@ -7,11 +7,14 @@ const router = express.Router();
 const userController = require('../controllers/user.controller');
 const verifyAdmin = require('../middlewares/verifyAdmin');
 const verifyToken = require('../middlewares/verifyToken');
+const verifyProfileCompleted = require('../middlewares/verifyProfileCompleted');
 
 
 router.get('/', verifyToken, userController.getUser);
 router.put('/',  verifyToken, userController.updateUser);
 router.delete('/',  verifyToken, userController.deleteUser);
+
+router.get('/verifyProfileCompleted', verifyToken, verifyProfileCompleted, userController.getUser);
 
 router.get('/useradmin/', verifyToken, verifyAdmin, userController.getAllUsersAdmin);
 router.post('/useradmin/', verifyToken, verifyAdmin, userController.addUserAdmin);
