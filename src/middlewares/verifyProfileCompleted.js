@@ -7,7 +7,7 @@ import User from "../models/user";
 
 
 
-const verifyAdmin = (req, res, next) => {
+const verifyProfileCompleted = (req, res, next) => {
     try {
         User.findById(req.userToken.id)
         .then(user => {
@@ -71,4 +71,4 @@ const verifyAdmin = (req, res, next) => {
     }
 };
 
-module.exports = verifyAdmin;
+module.exports = verifyProfileCompleted;
