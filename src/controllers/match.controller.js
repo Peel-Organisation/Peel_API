@@ -3,13 +3,20 @@ const Conversation = require('../models/conversation');
 
 
 exports.getSwipeProfil = async (req, res, next) => {
+  try {
     User.find()
-    .populate("interests")
-    .populate({path : 'questions', populate : "question"})
-    .then((users) => res.send(users))
-    .catch((err) => res.status(400).send(err));
+      .populate("interests")
+      .populate({ path: 'questions', populate: "question" })
+      .then((users) => res.send(users))
+      .catch((error) => {
+        next(error);
+      })
 
     //récupérer le profil de l'utilisateur
+
+  } catch (error) {
+    next(error)
+  }
 };
 
 /*
@@ -28,7 +35,7 @@ exports.PutLikeDislike = async (req, res, next) => {
         message: 'userTarget not found in database',
       });
     }
-    
+
     const like = {
       userID: req.params.id,
       statelike: req.body.statelike,
@@ -44,7 +51,7 @@ exports.PutLikeDislike = async (req, res, next) => {
         message: 'Invalid like data',
       });
     }
-  
+
     if (!likedby.userID || !likedby.statelike) {
       return res.status(400).send({
         message: 'Invalid likedBy data',
@@ -54,8 +61,8 @@ exports.PutLikeDislike = async (req, res, next) => {
     const isAlreadyLiked = userTarget.likedBy.find((like) => like.userID.toString() === currentUser._id.toString());
 
     if (isAlreadyLiked) {
-      return res.status(400).send({ 
-        message: 'You already liked this user.' 
+      return res.status(400).send({
+        message: 'You already liked this user.'
       });
     }
 
@@ -73,29 +80,26 @@ exports.PutLikeDislike = async (req, res, next) => {
 
       currentUser.matches.push(conversation._id);
       userTarget.matches.push(conversation._id);
-      
+
       await Promise.all([currentUser.save(), userTarget.save()]);
 
       return res.status(200).send({
         message: 'It\'s a match !',
-        data : {
-          currentUser : like,
-          userTarget : likedby
+        data: {
+          currentUser: like,
+          userTarget: likedby
         }
       });
     } else {
       return res.status(200).send({
         message: 'Like or dislike added to the current User and target User',
-        data : {
-          currentUser : like,
-          userTarget : likedby
+        data: {
+          currentUser: like,
+          userTarget: likedby
         }
       });
     }
   } catch (error) {
-    res.status(500).send({
-      message:'Some error occurred with the server : ' + error.message,
-      auth : false
-    })
+    next(error);
   }
 };

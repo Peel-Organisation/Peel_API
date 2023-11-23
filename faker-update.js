@@ -6,7 +6,7 @@ const token = process.env.GIPHY_API_KEY
 
 const getUserList = async () => {
     try {
-        const requestOptions = {  
+        const requestOptions = {
             headers: { 'Content-Type': 'application/json', "authorization": token },
             method: 'GET'
         };
@@ -20,7 +20,7 @@ const getUserList = async () => {
         return dataJson;
     }
     catch (error) {
-        console.log("error : ", error);
+        next(error);
     }
 }
 
@@ -40,7 +40,7 @@ const getRandomGif = async () => {
         return dataJson.data;
     }
     catch (error) {
-        console.log("error : ", error);
+        next(error);
     }
 }
 
@@ -61,8 +61,8 @@ const updateUser = async (user) => {
         return dataJson;
     }
     catch (error) {
-        console.log("error : ", error);
-    }   
+        next(error);
+    }
 }
 
 
@@ -87,9 +87,15 @@ getUserList().then((userList) => {
                     }
                     updateUser(user).then((updatedUser) => {
                         console.log("updatedUser : ", updatedUser)
+                    }).catch((error) => {
+                        next(error);
                     })
+                }).catch((error) => {
+                    next(error);
                 })
             }
         }
     }
+}).catch((error) => {
+    next(error);
 })
