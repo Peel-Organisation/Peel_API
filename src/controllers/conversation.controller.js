@@ -34,7 +34,6 @@ exports.createConversation = (req, res, next) => {
       { $push: { matches: [newConversation] } }
     ).then((User1) => {
 
-
       //ajout de la conversation dans la liste des conversations de l'utilisateur 2
       User.findOneAndUpdate(
         {
@@ -44,18 +43,34 @@ exports.createConversation = (req, res, next) => {
         { $push: { matches: [newConversation] } }
       ).then((User2) => {
 
-        //ajout des membres de la conversation
-        newConversation.members.push(User1);
-        newConversation.members.push(User2);
+        // Check if the conversation with the given members already exists
+        Conversation.findOne({ members: { $all: [User1, User2] } })
+          .then(existingConversation => {
+            if (existingConversation) {
+              // Conversation already exists
+              res.send({
+                message: "Conversation already exists",
+                conversation: existingConversation,
+              });
+            } else {
+              // Conversation doesn't exist, so add new conversation
+              console.log("new conversation")
+              newConversation.members.push(User1);
+              newConversation.members.push(User2);
 
-        newConversation.save().then((conversation) => {
-          res.send({
-            message: "conversation " + conversation._id + " successfully added",
-            conversation: conversation,
+              newConversation.save().then((conversation) => {
+                res.send({
+                  message: "conversation " + conversation._id + " successfully added",
+                  conversation: conversation,
+                });
+              }).catch((error) => {
+                next(error);
+              });
+            }
+          })
+          .catch(error => {
+            next(error);
           });
-        }).catch((error) => {
-          next(error)
-        });
       }).catch((error) => {
         next(error)
       });

@@ -1,4 +1,4 @@
-const { fakerFR  } = require('@faker-js/faker');
+const { fakerFR } = require('@faker-js/faker');
 require('dotenv').config();
 const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules } = require('./utils.js');
 
@@ -9,14 +9,9 @@ const faker = fakerFR
 const loginAdmin = async () => {
     try {
         const requestOptions = {
-<<<<<<< HEAD:faker-update.js
-            headers: { 'Content-Type': 'application/json', "authorization": token },
-            method: 'GET'
-=======
             headers: { 'Content-Type': 'application/json' },
             method: 'POST',
             body: JSON.stringify({ email: process.env.ADMIN_EMAIL, password: process.env.ADMIN_PASSWORD })
->>>>>>> 2691bb4c3a84426f8dc8c969050435b801da99b7:src/faker/user_update.faker.js
         };
         let link = `${process.env.API_LINK}/auth/login`;
         const response = await fetch(link, requestOptions)
@@ -35,7 +30,7 @@ const loginAdmin = async () => {
 const getUserList = async () => {
     try {
         const AdminToken = await loginAdmin();
-        const requestOptions = {  
+        const requestOptions = {
             headers: { 'Content-Type': 'application/json', "authorization": AdminToken },
             method: 'GET'
         };
@@ -86,27 +81,6 @@ const updateUserList = async () => {
     const userList = await getUserList()
     if (userList?.length > 0) {
         for (let user of userList) {
-<<<<<<< HEAD:faker-update.js
-            if (user.gif === undefined) {
-                getRandomGif().then((gif) => {
-                    user.gif = {
-                        id: gif.id,
-                        url: gif.url,
-                        title: gif.title,
-                        image: {
-                            "height": gif?.images?.original?.height,
-                            "width": gif?.images?.original?.width,
-                            "url": gif?.images?.original?.url,
-                            "webp": gif?.images?.original?.webp,
-                            "frames": gif?.images?.original?.frames,
-                            "hash": gif?.images?.original?.hash
-                        }
-                    }
-                    updateUser(user).then((updatedUser) => {
-                        console.log("updatedUser : ", updatedUser)
-                    }).catch((error) => {
-                        next(error);
-=======
             await delay(5000);
             getRandomGif(user).then((user) => {
                 getRandomMovie(user).then((user) => {
@@ -118,7 +92,6 @@ const updateUserList = async () => {
                                 })
                             })
                         })
->>>>>>> 2691bb4c3a84426f8dc8c969050435b801da99b7:src/faker/user_update.faker.js
                     })
                 }).catch((error) => {
                     next(error);
@@ -126,16 +99,10 @@ const updateUserList = async () => {
             })
         }
     }
-<<<<<<< HEAD:faker-update.js
-}).catch((error) => {
-    next(error);
-})
-=======
 }
 
 function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-} 
+    return new Promise(resolve => setTimeout(resolve, time));
+}
 
 updateUserList()
->>>>>>> 2691bb4c3a84426f8dc8c969050435b801da99b7:src/faker/user_update.faker.js
