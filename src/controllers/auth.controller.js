@@ -74,10 +74,14 @@ exports.login = async (req, res, next) => {
 };
 
 exports.getUserByToken = async (req, res, next) => {
-  return res.send({
-    message: "User " + req.userToken.id + " successfully logged in",
-    auth: true,
-    token: req.headers["authorization"],
-    userId: req.userToken.id,
-  });
+  try {
+    return res.send({
+      message: "User " + req.userToken.id + " successfully logged in",
+      auth: true,
+      token: req.headers["authorization"],
+      userId: req.userToken.id,
+    });
+  } catch (error) {
+    next(error)
+  }
 };

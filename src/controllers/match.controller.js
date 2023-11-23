@@ -173,18 +173,14 @@ exports.getCompatibleProfil = async (req, res, next) => {
             compatibilityTab.sort(compareScore)
 
             res.send(compatibilityTab);
+          }).catch((error) => {
+            next(error);
           })
-          .catch(err => {
-            res.status(500).send({
-              message: err.message || 'Some error occurred while retrieving profiles.'
-            });
-          });
+      }).catch((error) => {
+        next(error);
       })
   } catch (error) {
-    res.status(500).send({
-      message: 'Some error occurred with the server : ' + error.message,
-      auth: false
-    })
+    next(error)
   }
 };
 
