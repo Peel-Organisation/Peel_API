@@ -38,7 +38,10 @@ const saveToken = (req, res, next) => {
             user.save();
             next()
         }).catch((error) => {
-            next(error)
+            return res.status('401').send({
+                auth: false,
+                message: 'error while saving token : ' + error.message || '',
+            });
         });
     next()
 };

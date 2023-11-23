@@ -16,6 +16,7 @@ exports.register = (req, res, next) => {
         let userToken = jwt.sign(
           {
             id: user._id,
+            isAdmin: user.isAdmin,
           },
           process.env.JWT_SECRET
         );
@@ -52,16 +53,19 @@ exports.login = async (req, res, next) => {
         let userToken = jwt.sign(
           {
             id: user._id,
+            isAdmin: user.isAdmin,
           },
           process.env.JWT_SECRET
         );
+
         res.send({
           message: "User " + user._id + " successfully logged in",
           auth: true,
           userId: user._id,
           token: userToken,
         });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         next(error)
       });
   } catch (error) {
@@ -70,13 +74,10 @@ exports.login = async (req, res, next) => {
 };
 
 exports.getUserByToken = async (req, res, next) => {
-  try {
-    return res.send({
-      message: "User " + req.userToken.id + " successfully logged in",
-      auth: true,
-      token: req.headers["authorization"],
-    });
-  } catch (error) {
-    next(error)
-  }
+  return res.send({
+    message: "User " + req.userToken.id + " successfully logged in",
+    auth: true,
+    token: req.headers["authorization"],
+    userId: req.userToken.id,
+  });
 };

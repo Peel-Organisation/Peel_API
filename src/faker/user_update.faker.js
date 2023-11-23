@@ -1,16 +1,46 @@
-const { faker } = require('@faker-js/faker');
-faker.setLocale('fr')
-const axios = require('axios');
+const { fakerFR  } = require('@faker-js/faker');
+require('dotenv').config();
+const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules } = require('./utils.js');
 
-const token = process.env.GIPHY_API_KEY
+const faker = fakerFR
+
+
+
+const loginAdmin = async () => {
+    try {
+        const requestOptions = {
+<<<<<<< HEAD:faker-update.js
+            headers: { 'Content-Type': 'application/json', "authorization": token },
+            method: 'GET'
+=======
+            headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+            body: JSON.stringify({ email: process.env.ADMIN_EMAIL, password: process.env.ADMIN_PASSWORD })
+>>>>>>> 2691bb4c3a84426f8dc8c969050435b801da99b7:src/faker/user_update.faker.js
+        };
+        let link = `${process.env.API_LINK}/auth/login`;
+        const response = await fetch(link, requestOptions)
+        const dataJson = await response.json();
+        let status_code = response.status;
+        if (status_code !== 200) {
+            throw new Error(dataJson.message);
+        }
+        return dataJson.token;
+    }
+    catch (error) {
+        next(error);
+    }
+}
 
 const getUserList = async () => {
     try {
-        const requestOptions = {
-            headers: { 'Content-Type': 'application/json', "authorization": token },
+        const AdminToken = await loginAdmin();
+        const requestOptions = {  
+            headers: { 'Content-Type': 'application/json', "authorization": AdminToken },
             method: 'GET'
         };
-        let link = `${process.env.API_LINK}/user/all`;
+        console.log("AdminToken : ", AdminToken)
+        let link = `${process.env.API_LINK}/user/useradmin`;
         const response = await fetch(link, requestOptions)
         const dataJson = await response.json();
         let status_code = response.status;
@@ -24,30 +54,11 @@ const getUserList = async () => {
     }
 }
 
-const getRandomGif = async () => {
-    try {
-        const requestOptions = {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'GET'
-        };
-        let link = `${process.env.GIPHY_PATH}/random?api_key=${process.env.GIPHY_API_KEY}`;
-        const response = await fetch(link, requestOptions)
-        const dataJson = await response.json();
-        let status_code = response.status;
-        if (status_code !== 200) {
-            throw new Error(dataJson.message);
-        }
-        return dataJson.data;
-    }
-    catch (error) {
-        next(error);
-    }
-}
-
 const updateUser = async (user) => {
     try {
+        const AdminToken = await loginAdmin();
         const requestOptions = {
-            headers: { 'Content-Type': 'application/json', "authorization": token },
+            headers: { 'Content-Type': 'application/json', "authorization": AdminToken },
             method: 'PUT',
             body: JSON.stringify(user)
         };
@@ -67,9 +78,15 @@ const updateUser = async (user) => {
 
 
 
-getUserList().then((userList) => {
+
+
+
+
+const updateUserList = async () => {
+    const userList = await getUserList()
     if (userList?.length > 0) {
         for (let user of userList) {
+<<<<<<< HEAD:faker-update.js
             if (user.gif === undefined) {
                 getRandomGif().then((gif) => {
                     user.gif = {
@@ -89,13 +106,36 @@ getUserList().then((userList) => {
                         console.log("updatedUser : ", updatedUser)
                     }).catch((error) => {
                         next(error);
+=======
+            await delay(5000);
+            getRandomGif(user).then((user) => {
+                getRandomMovie(user).then((user) => {
+                    updateInterest(user).then((user) => {
+                        getRandomModules(user).then((user) => {
+                            getRandomMusic(user).then((user) => {
+                                updateUser(user).then((user) => {
+                                    console.log("user updated : ", user)
+                                })
+                            })
+                        })
+>>>>>>> 2691bb4c3a84426f8dc8c969050435b801da99b7:src/faker/user_update.faker.js
                     })
                 }).catch((error) => {
                     next(error);
                 })
-            }
+            })
         }
     }
+<<<<<<< HEAD:faker-update.js
 }).catch((error) => {
     next(error);
 })
+=======
+}
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+} 
+
+updateUserList()
+>>>>>>> 2691bb4c3a84426f8dc8c969050435b801da99b7:src/faker/user_update.faker.js

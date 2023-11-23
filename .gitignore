@@ -3,4 +3,3 @@ node_modules
 .idea
 build
 package-lock.json
-firebase-service-account-key.json
