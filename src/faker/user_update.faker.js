@@ -1,4 +1,4 @@
-const { fakerFR  } = require('@faker-js/faker');
+const { fakerFR } = require('@faker-js/faker');
 require('dotenv').config();
 const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules } = require('./utils.js');
 
@@ -23,14 +23,14 @@ const loginAdmin = async () => {
         return dataJson.token;
     }
     catch (error) {
-        console.log("error : ", error);
+        next(error);
     }
 }
 
 const getUserList = async () => {
     try {
         const AdminToken = await loginAdmin();
-        const requestOptions = {  
+        const requestOptions = {
             headers: { 'Content-Type': 'application/json', "authorization": AdminToken },
             method: 'GET'
         };
@@ -45,7 +45,7 @@ const getUserList = async () => {
         return dataJson;
     }
     catch (error) {
-        console.log("error : ", error);
+        next(error);
     }
 }
 
@@ -67,8 +67,8 @@ const updateUser = async (user) => {
         return dataJson;
     }
     catch (error) {
-        console.log("error : ", error);
-    }   
+        next(error);
+    }
 }
 
 
@@ -93,6 +93,8 @@ const updateUserList = async () => {
                             })
                         })
                     })
+                }).catch((error) => {
+                    next(error);
                 })
             })
         }
@@ -100,7 +102,7 @@ const updateUserList = async () => {
 }
 
 function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-} 
+    return new Promise(resolve => setTimeout(resolve, time));
+}
 
 updateUserList()
