@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const Conversation = require('../models/conversation');
-const moment = require('moment'); 
+const moment = require('moment');
 const interest = require('../models/interest');
 const date = new Date();
 const Score = require('../compatibilityScore.json');
@@ -8,13 +8,20 @@ const filterMultiplier = require('../compatibilityFilter.json');
 
 
 exports.getSwipeProfil = async (req, res, next) => {
+  try {
     User.find()
-    .populate("interests")
-    .populate({path : 'questions', populate : "question"})
-    .then((users) => res.send(users))
-    .catch((err) => res.status(400).send(err));
+      .populate("interests")
+      .populate({ path: 'questions', populate: "question" })
+      .then((users) => res.send(users))
+      .catch((error) => {
+        next(error);
+      })
 
     //récupérer le profil de l'utilisateur
+
+  } catch (error) {
+    next(error)
+  }
 };
 
 /*
@@ -28,14 +35,14 @@ exports.getCompatibleProfil = async (req, res, next) => {
     const filters = req.body
     User.findById(req.userToken.id)
       .then(user => {
-        
+
 
 
         const userPreferences = user.preferences;
         const minBirth = moment(date).subtract(userPreferences.age.min, 'years');
         const maxBirth = moment(date).subtract(userPreferences.age.max, 'years');
 
-         
+
 
 
         let age = (new Date() - new Date(user.birthday)) / (365.25 * 24 * 60 * 60 * 1000);
@@ -72,19 +79,19 @@ exports.getCompatibleProfil = async (req, res, next) => {
           sexeTab.push("Female");
           sexeTab.push("Other");
           sexeTab.push("Male");
-        } 
+        }
 
 
 
         // retirer les utilisateurs déja likés
 
-        let likeTab = user.likes.map(like => {return like.userID})
+        let likeTab = user.likes.map(like => { return like.userID })
 
 
-        
+
 
         User.find({
-          _id : { 
+          _id: {
             $nin: likeTab
           },
           birthday: {
@@ -94,11 +101,11 @@ exports.getCompatibleProfil = async (req, res, next) => {
           },
           // "preferences.age.min": {
           //   $lt: age,
-            // $exists: true
+          // $exists: true
           // },
           // "preferences.age.max": {
           //   $gt: age,
-            // $exists: true
+          // $exists: true
           // },
           gender: {
             $in: sexeTab,
@@ -112,13 +119,13 @@ exports.getCompatibleProfil = async (req, res, next) => {
             $exists: true
           },
           "lastName": {
-            $exists: true 
+            $exists: true
           },
           "gif.image.url": {
             $exists: true
           },
           "movie.image.poster_path": {
-            $exists: true 
+            $exists: true
           },
           "movie.title": {
             $exists: true
@@ -136,48 +143,44 @@ exports.getCompatibleProfil = async (req, res, next) => {
           "biographie": {
             $exists: true
           }
-      },
-      [
-        "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake"
-      ]
-      )
-      .then(profiles => {
-        if (userSexualOrientation === "bisexual") {
-          profiles = profiles.filter(profile => {
-            if (profile.preferences.sexual_orientation == "bisexual") return true;
-            switch (userGender) {
-              case "Male":
-                if (profile.gender == "Male" && profile.preferences.sexual_orientation === "homo") return true;
-                else if (profile.gender == "Female" && profile.preferences.sexual_orientation === "hetero") return true;
-                else return false;
-              case "Female":
-                if (profile.gender == "Male" && profile.preferences.sexual_orientation === "hetero") return true;
-                else if (profile.gender == "Female" && profile.preferences.sexual_orientation === "homo") return true;
-                else return false;
-              case "Other":
-                return true
+        },
+          [
+            "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake"
+          ]
+        )
+          .then(profiles => {
+            if (userSexualOrientation === "bisexual") {
+              profiles = profiles.filter(profile => {
+                if (profile.preferences.sexual_orientation == "bisexual") return true;
+                switch (userGender) {
+                  case "Male":
+                    if (profile.gender == "Male" && profile.preferences.sexual_orientation === "homo") return true;
+                    else if (profile.gender == "Female" && profile.preferences.sexual_orientation === "hetero") return true;
+                    else return false;
+                  case "Female":
+                    if (profile.gender == "Male" && profile.preferences.sexual_orientation === "hetero") return true;
+                    else if (profile.gender == "Female" && profile.preferences.sexual_orientation === "homo") return true;
+                    else return false;
+                  case "Other":
+                    return true
+                }
+              });
             }
-          });
-        }
-        let compatibilityTab = profiles.map(profile =>{
-          return calculateCompatibility(user, profile, filters)
-        })
+            let compatibilityTab = profiles.map(profile => {
+              return calculateCompatibility(user, profile, filters)
+            })
 
-        compatibilityTab.sort(compareScore)
-        
-        res.send(compatibilityTab);
+            compatibilityTab.sort(compareScore)
+
+            res.send(compatibilityTab);
+          }).catch((error) => {
+            next(error);
+          })
+      }).catch((error) => {
+        next(error);
       })
-      .catch(err => {
-        res.status(500).send({
-          message: err.message || 'Some error occurred while retrieving profiles.'
-        });
-      });
-    })
   } catch (error) {
-      res.status(500).send({
-        message:'Some error occurred with the server : ' + error.message,
-        auth : false
-      })
+    next(error)
   }
 };
 
@@ -190,13 +193,13 @@ const calculateCompatibility = (user1, user2, filters) => {
   let multiplier = 1
 
   //tri par gif 
-  if (user1?.gif?.title === user2?.gif?.title ) user2.compatibilityScore += Score?.gif?.title
+  if (user1?.gif?.title === user2?.gif?.title) user2.compatibilityScore += Score?.gif?.title
 
   //tri par interet
   multiplier = 1
   if (filters?.interest) multiplier = filterMultiplier.interest
   user1?.interests?.forEach(interest => {
-    if (user2?.interests?.includes(interest)){
+    if (user2?.interests?.includes(interest)) {
       user2.compatibilityScore += (Score?.interest?.title * multiplier)
     }
   })
@@ -204,13 +207,13 @@ const calculateCompatibility = (user1, user2, filters) => {
   //tri par musique (a faire plus tard)
   multiplier = 1
   if (filters?.music) multiplier = filterMultiplier.music
-  if (user1?.music?.title === user2?.music?.title){
+  if (user1?.music?.title === user2?.music?.title) {
     user2.compatibilityScore += (Score?.music?.title * multiplier)
-  } 
-  if (user1?.music?.artist?.name === user2?.music?.artist?.name){
+  }
+  if (user1?.music?.artist?.name === user2?.music?.artist?.name) {
     user2.compatibilityScore += (Score?.music?.artist * multiplier)
   }
-  if (user1?.music?.album?.name === user2?.music?.album?.title){
+  if (user1?.music?.album?.name === user2?.music?.album?.title) {
     user2.compatibilityScore += (Score?.music?.album * multiplier)
   }
   //tri par sport (a faire plus tard)
@@ -218,16 +221,16 @@ const calculateCompatibility = (user1, user2, filters) => {
   if (filters?.sport) multiplier = filterMultiplier.sport
   //tri par film
   multiplier = 1
-  if (filters.movie ) multiplier = filterMultiplier.movie
-  if (user1?.movie?.title === user2?.movie?.title){
+  if (filters.movie) multiplier = filterMultiplier.movie
+  if (user1?.movie?.title === user2?.movie?.title) {
     user2.compatibilityScore += (Score?.movie?.title * multiplier)
-  } 
+  }
   user1?.movie?.genres_ids?.forEach(genre => {
-    if (user2?.movie?.genres_ids?.includes(genre)){
+    if (user2?.movie?.genres_ids?.includes(genre)) {
       user2.compatibilityScore += (Score?.movie?.genre * multiplier)
     }
   });
-  
+
   // tri par jeu vidéo (a faire plus tard)
   multiplier = 1
   if (filters.games) multiplier = filterMultiplier.games
@@ -255,7 +258,7 @@ exports.PutLikeDislike = async (req, res, next) => {
         message: 'userTarget not found in database',
       });
     }
-    
+
     const like = {
       userID: req.params.id,
       statelike: req.body.statelike,
@@ -271,7 +274,7 @@ exports.PutLikeDislike = async (req, res, next) => {
         message: 'Invalid like data',
       });
     }
-  
+
     if (!likedby.userID || !likedby.statelike) {
       return res.status(400).send({
         message: 'Invalid likedBy data',
@@ -282,16 +285,16 @@ exports.PutLikeDislike = async (req, res, next) => {
     const isAlreadyLikedCurrent = currentUser.likes.find((like) => like?.userID?.toString() === userTarget?._id?.toString());
 
     if (isAlreadyLikedCurrent) {
-      return res.status(400).send({ 
-        message: 'You already liked this user in Current.' 
+      return res.status(400).send({
+        message: 'You already liked this user in Current.'
       });
     }
 
     const isAlreadyLikedTarget = currentUser.likes.find((like) => like?.userID?.toString() === userTarget?._id?.toString());
 
     if (isAlreadyLikedTarget) {
-      return res.status(400).send({ 
-        message: 'You already liked this user in target' 
+      return res.status(400).send({
+        message: 'You already liked this user in target'
       });
     }
 
@@ -310,30 +313,27 @@ exports.PutLikeDislike = async (req, res, next) => {
 
       currentUser.matches.push(conversation._id);
       userTarget.matches.push(conversation._id);
-      
+
       currentUser.save();
       userTarget.save();
 
       return res.status(200).send({
         message: 'It\'s a match !',
-        data : {
-          currentUser : like,
-          userTarget : likedby
+        data: {
+          currentUser: like,
+          userTarget: likedby
         }
       });
     } else {
       return res.status(200).send({
         message: 'Like or dislike added to the current User and target User',
-        data : {
-          currentUser : like,
-          userTarget : likedby
+        data: {
+          currentUser: like,
+          userTarget: likedby
         }
       });
     }
   } catch (error) {
-    res.status(500).send({
-      message:'Some error occurred with the server : ' + error.message,
-      auth : false
-    })
+    next(error);
   }
 };
