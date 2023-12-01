@@ -42,7 +42,7 @@ SCRIPT_VERSION="v1.1"
 # Variables
 IMAGE_NAME="peelregistry/peel_api:latest"
 CONTAINER_NAME="peel_api"
-COMPOSE_FILE="docker-compose-development.yml"
+COMPOSE_FILE="docker-compose.yml"
 LATEST_IMAGE_ID=$(docker image inspect -f '{{.Id}}' $IMAGE_NAME 2>/dev/null)
 IMAGE_WITHOUT_TAG=$(docker images | grep $IMAGE_NAME | awk '{print $3}')
 
