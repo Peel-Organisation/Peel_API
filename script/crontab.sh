@@ -21,5 +21,7 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
+0 3 * * * sudo chmod +x pull_deploy_docker-api.sh
+0 3 * * * sed -i -e 's/\r$//' pull_deploy_docker-api.sh
 0 4 * * * /home/ubuntu/pull_deploy_docker.sh >> /home/ubuntu/cron.log 2>&1
 

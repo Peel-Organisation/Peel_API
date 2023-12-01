@@ -1,40 +1,43 @@
 #!/bin/bash
 
-# Couleurs
+# Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Fonction pour afficher en vert
+# Function to print in green
 print_success() {
     echo -e "${GREEN}$1${NC}"
 }
 
-# Fonction pour afficher en rouge
+# Function to print in red
 print_error() {
     echo -e "${RED}$1${NC}"
 }
 
-# Fonction pour afficher en jaune
+# Function to print in yellow
 print_warning() {
     echo -e "${YELLOW}$1${NC}"
 }
 
-# Fonction pour afficher un bloc de séparation avec le nom de l'étape
+# Function to print a separation block with the step name
 print_step() {
-    echo -e "\n################################"
+    echo -e "\n#######################################################"
     echo -e "## $1"
-    echo -e "################################\n"
+    echo -e "#######################################################\n"
 }
 
-# Fonction pour afficher un bloc de séparation
+# Function to print a separation block
 print_separator() {
-    echo -e "----------------------------------------"
+    echo -e "------------------------------------------------------------------------------"
 }
 
-# Enregistrement du temps de début
+# Record start time
 start_time=$(date +%s)
+
+# Version information
+SCRIPT_VERSION="v1.1"
 
 # Variables
 IMAGE_NAME="peelregistry/peel_api_dev:latest"
@@ -43,9 +46,16 @@ COMPOSE_FILE="docker-compose-development.yml"
 LATEST_IMAGE_ID=$(docker image inspect -f '{{.Id}}' $IMAGE_NAME 2>/dev/null)
 IMAGE_WITHOUT_TAG=$(docker images | grep $IMAGE_NAME | awk '{print $3}')
 
-# Affichage du début du script
+# Display the start of the script with version information
 print_separator
-print_step "Starting the deployment script..."
+print_step "Starting the deployment script $SCRIPT_VERSION..."
+
+# Display executed commands
+echo -e "\n${YELLOW}Executed Commands:${NC}"
+echo "1. Removing Docker images with the tag '<none>' (if any):"
+echo "   docker rmi $IMAGE_WITHOUT_TAG"
+echo "2. Checking if the Docker Compose file exists:"
+echo "   [ -f "$COMPOSE_FILE" ]"
 
 # Check Docker images with the tag "<none>"
 if [ -n "$IMAGE_WITHOUT_TAG" ]; then
@@ -59,7 +69,7 @@ fi
 
 # Check if the docker-compose.yml file exists
 if [ ! -f "$COMPOSE_FILE" ]; then
-    print_error "The file $COMPOSE_FILE does not exist."
+    print_error "Error: The file $COMPOSE_FILE does not exist."
     exit 1
 fi
 
@@ -145,13 +155,13 @@ else
     print_success "The new container is up to date."
 fi
 
-# Affichage du temps d'exécution
+# Display the execution time
 end_time=$(date +%s)
 execution_time=$((end_time - start_time))
 print_separator
 print_step "Script execution completed in $execution_time seconds."
 
-# Affichage de la fin du script
+# Display the end of the script
 print_separator
 print_success "Image deployment is complete."
 print_separator
