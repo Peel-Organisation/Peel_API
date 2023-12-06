@@ -30,13 +30,10 @@ exports.getSwipeProfil = async (req, res, next) => {
   * @access Private
 */
 exports.getCompatibleProfil = async (req, res, next) => {
-  console.log("test")
   try {
     const filters = req.body
     User.findById(req.userToken.id)
       .then(user => {
-
-
 
         const userPreferences = user.preferences;
         const minBirth = moment(date).subtract(userPreferences.age.min, 'years');
@@ -94,27 +91,27 @@ exports.getCompatibleProfil = async (req, res, next) => {
           _id: {
             $nin: likeTab
           },
-          birthday: {
-            $gt: maxBirth,
-            $lt: minBirth,
-            $exists: true
-          },
+          // birthday: {
+          //   $gt: maxBirth,
+          //   $lt: minBirth,
+          //   $exists: true
+          // },
           // "preferences.age.min": {
           //   $lt: age,
-          // $exists: true
+          //   $exists: true
           // },
           // "preferences.age.max": {
           //   $gt: age,
-          // $exists: true
+          //   $exists: true
           // },
-          gender: {
-            $in: sexeTab,
-            $exists: true
-          },
-          "preferences.sexual_orientation": {
-            $in: orientationTab,
-            $exists: true
-          },
+          // gender: {
+          //   $in: sexeTab,
+          //   $exists: true
+          // },
+          // "preferences.sexual_orientation": {
+          //   $in: orientationTab,
+          //   $exists: true
+          // },
           "firstName": {
             $exists: true
           },
@@ -124,15 +121,15 @@ exports.getCompatibleProfil = async (req, res, next) => {
           "gif.image.url": {
             $exists: true
           },
-          "movie.image.poster_path": {
+          "movie.images.poster_path": {
             $exists: true
           },
           "movie.title": {
             $exists: true
           },
-          // "music.image.url": {
-          //   $exists: true
-          // },
+          "music.image": {
+            $exists: true
+          },
           "questions": {
             $exists: true
           },
