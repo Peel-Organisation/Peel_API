@@ -40,7 +40,7 @@ start_time=$(date +%s)
 SCRIPT_VERSION="v1.1"
 
 # Variables
-IMAGE_NAME="peelregistry/peel_api:latest"
+IMAGE_NAME="peelregistry/peel_api"
 CONTAINER_NAME="peel_api"
 COMPOSE_FILE="docker-compose.yml"
 LATEST_IMAGE_ID=$(docker image inspect -f '{{.Id}}' $IMAGE_NAME 2>/dev/null)
