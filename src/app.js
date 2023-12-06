@@ -20,12 +20,11 @@ app.use((req, res, next) => {
   if (process.env.STACK === 'development') {
     const currentTime = new Date().toISOString();
     const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log(`[${currentTime}] - Requête reçue : ${req.method}, ${req.url}, ${req.params}, ${req.body} , | de IP:  [${clientIp}] `);
+    console.log(`[${currentTime}] - Requête reçue : ${req.method}, ${req.url}, ${JSON.stringify(req.params)}, ${JSON.stringify(req.body)} , | de IP:  [${clientIp}] `);
 
     if (req.method === 'POST' || req.method === 'PUT') {
       console.log('Corps de la requête :', req.body);
     }
-
   }
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
