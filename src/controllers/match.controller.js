@@ -139,10 +139,13 @@ exports.getCompatibleProfil = async (req, res, next) => {
           },
           "biographie": {
             $exists: true
+          },
+          "profileModules": {
+            $exists: true
           }
         },
           [
-            "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake"
+            "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake", "profileModules"
           ]
         )
           .then(profiles => {
