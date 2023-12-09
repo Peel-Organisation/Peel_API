@@ -1,50 +1,50 @@
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
-const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules } = require('./utils.js');
+const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules, getRandomBoolean } = require('./utils.js');
 
 
 const addUser = async (user) => {
-    try {
-        const AdminToken = await loginAdmin();
-        const requestOptions = {
-            headers: { 'Content-Type': 'application/json', "authorization": AdminToken },
-            method: 'POST',
-            body: JSON.stringify(user)
-        };
-        let link = `${process.env.API_LINK}/user/useradmin/`;
-        const response = await fetch(link, requestOptions)
-        const dataJson = await response.json();
-        let status_code = response.status;
-        if (status_code !== 200) {
-            throw new Error(dataJson.message);
-        }
-        return dataJson;
+  try {
+    const AdminToken = await loginAdmin();
+    const requestOptions = {
+      headers: { 'Content-Type': 'application/json', "authorization": AdminToken },
+      method: 'POST',
+      body: JSON.stringify(user)
+    };
+    let link = `${process.env.API_LINK}/user/useradmin/`;
+    const response = await fetch(link, requestOptions)
+    const dataJson = await response.json();
+    let status_code = response.status;
+    if (status_code !== 200) {
+      throw new Error(dataJson.message);
     }
-    catch (error) {
-        console.log("error : ", error);
-    }   
+    return dataJson;
+  }
+  catch (error) {
+    console.log("error : ", error);
+  }
 }
 
 
 const loginAdmin = async () => {
-    try {
-        const requestOptions = {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify({ email: process.env.ADMIN_EMAIL, password: process.env.ADMIN_PASSWORD })
-        };
-        let link = `${process.env.API_LINK}/auth/login`;
-        const response = await fetch(link, requestOptions)
-        const dataJson = await response.json();
-        let status_code = response.status;
-        if (status_code !== 200) {
-            throw new Error(dataJson.message);
-        }
-        return dataJson.token;
+  try {
+    const requestOptions = {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({ email: process.env.ADMIN_EMAIL, password: process.env.ADMIN_PASSWORD })
+    };
+    let link = `${process.env.API_LINK}/auth/login`;
+    const response = await fetch(link, requestOptions)
+    const dataJson = await response.json();
+    let status_code = response.status;
+    if (status_code !== 200) {
+      throw new Error(dataJson.message);
     }
-    catch (error) {
-        console.log("error : ", error);
-    }
+    return dataJson.token;
+  }
+  catch (error) {
+    console.log("error : ", error);
+  }
 }
 
 const getRandomInterval = (min, max) => {
@@ -59,6 +59,7 @@ const createRandomUser = async () => {
   let interval = getRandomInterval(18, 100);
   let minAgeInteval = interval[0];
   let maxAgeInteval = interval[1];
+  const searchLove = getRandomBoolean();
   let user = {
     email: faker.internet.email(),
     password: faker.internet.password(),
@@ -68,17 +69,27 @@ const createRandomUser = async () => {
     interests: [],
     music: {},
     gender: ["Male", "Female", "Other"][getRandomInt(3)],
-    questions: [{ question : "63cdcc53dae4c0f0b9abe873",
+    questions: [{
+      question: "63cdcc53dae4c0f0b9abe873",
       answer: faker.lorem.sentence()
     },
-    { question : "63cdcc53dae4c0f0b9abe873",
+    {
+      question: "63cdcc53dae4c0f0b9abe873",
       answer: faker.lorem.sentence()
     },
-    { question : "63cdcc53dae4c0f0b9abe873",
+    {
+      question: "63cdcc53dae4c0f0b9abe873",
       answer: faker.lorem.sentence()
     }],
-    preferences: {age: {min: minAgeInteval, max: maxAgeInteval}, sexual_orientation: ["hetero", "homo", "bi"][getRandomInt(3)] },
+    preferences: {
+      age: { min: minAgeInteval, max: maxAgeInteval },
+      sexual_orientation: ["hetero", "homo", "bi"][getRandomInt(3)],
+      searchLove: searchLove,
+      searchFriend: !searchLove
+    },
+
     biographie: person.bio(),
+
     isFake: true
   };
   console.log(user.preferences)
@@ -93,7 +104,7 @@ const createRandomUser = async () => {
             console.log("user3 : ", user)
 
             addUser(user).then((user) => {
-                console.log("user updated : ", user)
+              console.log("user updated : ", user)
             })
           })
         })
@@ -112,6 +123,6 @@ function getRandomInt(max) {
 
 
 
-for (let i = 0; i < 50; i++){
+for (let i = 0; i < 50; i++) {
   createRandomUser()
 } 

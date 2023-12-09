@@ -1,6 +1,6 @@
 const { fakerFR } = require('@faker-js/faker');
 require('dotenv').config();
-const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules } = require('./utils.js');
+const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules, getPreferences } = require('./utils.js');
 
 const faker = fakerFR
 
@@ -23,7 +23,7 @@ const loginAdmin = async () => {
         return dataJson.token;
     }
     catch (error) {
-        next(error);
+        console.log(error);
     }
 }
 
@@ -45,7 +45,7 @@ const getUserList = async () => {
         return dataJson;
     }
     catch (error) {
-        next(error);
+        console.log(error);
     }
 }
 
@@ -67,7 +67,7 @@ const updateUser = async (user) => {
         return dataJson;
     }
     catch (error) {
-        next(error);
+        console.log(error);
     }
 }
 
@@ -81,21 +81,47 @@ const updateUserList = async () => {
     const userList = await getUserList()
     if (userList?.length > 0) {
         for (let user of userList) {
-            await delay(5000);
+            if (!user) {
+                continue;
+            }
+            if (!user.isFake) {
+                console.log("user not fake")
+                continue;
+            }
+            console.log("user : ", user._id)
+            await delay(10000);
             getRandomGif(user).then((user) => {
                 getRandomMovie(user).then((user) => {
                     updateInterest(user).then((user) => {
                         getRandomModules(user).then((user) => {
                             getRandomMusic(user).then((user) => {
-                                updateUser(user).then((user) => {
-                                    console.log("user updated : ", user)
+                                getPreferences(user).then((user) => {
+                                    getCustumBio(user).then((user) => {
+                                        updateUser(user).then((user) => {
+                                            console.log("user updated : ", user)
+                                        }).catch((error) => {
+                                            console.log("error while updating user : ", error);
+                                        })
+                                    }).catch((error) => {
+                                        console.log("error while getting custom bio : ", error);
+                                    })
+                                }).catch((error) => {
+                                    console.log("error while getting preferences : ", error);
                                 })
+                            }).catch((error) => {
+                                console.log("error while getting random music : ", error);
                             })
+                        }).catch((error) => {
+                            console.log("error while getting random modules : ", error);
                         })
+                    }).catch((error) => {
+                        console.log("error while updating interest : ", error);
                     })
                 }).catch((error) => {
-                    next(error);
+                    console.log("error while getting random movie : ", error);
                 })
+            }).catch((error) => {
+                console.log("error while getting random gif : ", error);
             })
         }
     }
