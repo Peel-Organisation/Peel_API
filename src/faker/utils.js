@@ -1,5 +1,5 @@
 
-const { fakerFR  } = require('@faker-js/faker');
+const { fakerFR } = require('@faker-js/faker');
 
 
 
@@ -14,7 +14,7 @@ const getRandomGif = async (user) => {
         const dataJson = await response.json();
         let status_code = response.status;
         if (status_code !== 200) {
-            throw new Error(dataJson.message);
+            throw new Error(dataJson);
         }
         let gif = dataJson.data;
         user.gif = {
@@ -33,7 +33,7 @@ const getRandomGif = async (user) => {
         return user;
     }
     catch (error) {
-        console.log("error : ", error);
+        throw error;
     }
 }
 
@@ -50,15 +50,15 @@ const getRandomMovie = async (user) => {
         const dataJson = await response.json();
         let status_code = response.status;
         if (status_code !== 200) {
-            throw new Error(dataJson.message);
+            throw new Error(dataJson);
         }
-        let movie = dataJson.results[Math.floor(Math.random() * dataJson.results.length)];  
+        let movie = dataJson.results[Math.floor(Math.random() * dataJson.results.length)];
         if (movie != undefined && user != undefined) {
             const genres_ids = movie.genre_ids.map(genre_id => {
                 const genre = genres.find(genre => genre.id === genre_id);
                 return {
-                id: genre_id,
-                name: genre?.name|| '',
+                    id: genre_id,
+                    name: genre?.name || '',
                 };
             });
             const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
@@ -66,8 +66,8 @@ const getRandomMovie = async (user) => {
                 id: movie?.id,
                 title: movie?.title,
                 images: {
-                    "backdrop_path": imageBaseUrl+movie?.backdrop_path,
-                    "poster_path": imageBaseUrl+movie?.poster_path
+                    "backdrop_path": imageBaseUrl + movie?.backdrop_path,
+                    "poster_path": imageBaseUrl + movie?.poster_path
                 },
                 "genre_ids": genres_ids
             }
@@ -75,8 +75,8 @@ const getRandomMovie = async (user) => {
         }
     }
     catch (error) {
-        console.log("error : ", error);
-    }   
+        throw error;
+    }
 }
 
 const fetchGenres = async (genres) => {
@@ -87,15 +87,15 @@ const fetchGenres = async (genres) => {
         const genres = data.genres;
         return genres;
     } catch (error) {
-        console.log(error);
+        throw error;
     }
 }
 
-    
+
 
 const getInterestList = async (user) => {
-     try {
-        const requestOptions = {  
+    try {
+        const requestOptions = {
             headers: { 'Content-Type': 'application/json' },
             method: 'GET'
         };
@@ -104,13 +104,13 @@ const getInterestList = async (user) => {
         const dataJson = await response.json();
         let status_code = response.status;
         if (status_code !== 200) {
-            throw new Error(dataJson.message);
+            throw new Error(dataJson);
         }
         let interest_list = dataJson;
         return interest_list;
     }
     catch (error) {
-        console.log("error : ", error);
+        throw error;
     }
 }
 
@@ -130,9 +130,40 @@ const updateInterest = async (user) => {
         return user;
     }
     catch (error) {
-        console.log("error : ", error);
+        throw error;
     }
 }
+
+const getPreferences = async (user) => {
+    try {
+        let interval = getRandomInterval(18, 100);
+        let minAgeInteval = interval[0];
+        let maxAgeInteval = interval[1];
+        const searchLove = getRandomBoolean();
+        const preferences = {
+            age: { min: minAgeInteval, max: maxAgeInteval },
+            sexual_orientation: ["hetero", "homo", "bi"][getRandomInt(3)],
+            searchLove: searchLove,
+            searchFriend: !searchLove
+        }
+        user.preferences = preferences
+        return user
+    } catch (error) {
+        throw error;
+    }
+}
+
+const getRandomInterval = (min, max) => {
+    let minInterval = Math.random() * (max - min) + min;
+    let maxInterval = Math.floor(Math.random() * (max - minInterval) + minInterval);
+    return [minInterval, maxInterval]
+}
+
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
 
 const getAge = async (date) => {
     try {
@@ -140,23 +171,26 @@ const getAge = async (date) => {
         return age;
     }
     catch (error) {
-        console.log("error : ", error);
+        throw error;
     }
 }
 
 const getCustumBio = async (user) => {
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = process.env.GPT_API_KEY;
+    const apiKey = process.env.OPEN_AI_API_KEY;
     const model = 'gpt-3.5-turbo'; // Le modèle à utiliser
 
 
     const age = await getAge(user.birthday)
-    prompt = "écris une biographie originale d'un site de rencontre. Voici des informations sur moi : \n" + `Je m'appelle ${user.firstName}, j'ai ${age} ans.\n`;
-    let interest = user.interest.map(interest => interest.name).join(', ');
+    prompt = "écris un court texte original pour un site de rencontre. \n Le texte doit faire un maximum de 400 caractères, tu n'es pas obligé d'inclure toutes les informations, justes celles qui sont importantes\Tu peux y inclure y une blague accrocheuse qui dois être diluée dans la conversation mais ne l'annonce pas avant. Ne met pas de hashtags dans la bio. Si tu ne comprends pas un terme ne l'inclus pas\n"
+    prompt += 'je suis a la recherche de : ' + (user.preferences.searchLove ? 'l\'amour' : 'l\'amitié') + ' tu dois le prendre en compte dans la biographie\n';
+    prompt += 'Voici des informations sur moi :\n'
+    prompt += `Je m'appelle ${user.firstName}, j'ai ${age} ans.\n`;
+    let interest = user.interests.map(interest => interest.name).join(', ');
     prompt += `Intérêts : ${interest}\n`;
-    prompt += `Film préféré : ${user.movie.title}\n`;
+    prompt += "je me considère comme : " + user.biographie
 
-    console.log("prompt : ", prompt)
+    // console.log("prompt : ", prompt)
 
 
     const requestOptions = {
@@ -167,14 +201,14 @@ const getCustumBio = async (user) => {
         },
         body: JSON.stringify({
             model: model,
-            prompt: prompt,
-            max_tokens: 50,
+            messages: [{ role: "user", content: prompt }], // Le texte à compléter
+            max_tokens: 400,
             temperature: 0.6,
             n: 1
         })
     };
 
-    
+
 
 
 
@@ -184,9 +218,14 @@ const getCustumBio = async (user) => {
         const dataJson = await response.json();
         let status_code = response.status;
         if (status_code !== 200) {
-            throw new Error(dataJson.message);
+            console.log("dataJson : ", dataJson)
+            throw new Error(dataJson);
         }
-        console.log("dataJson : ", dataJson)
+        // console.log("dataJson : ", dataJson)
+        const bio = dataJson.choices[0].message.content;
+        console.log("bio : ", bio)
+        user.biographie = bio;
+        return user;
     } catch (error) {
         console.error('Une erreur s\'est produite lors de la requête à ChatGPT:', error);
         return null;
@@ -195,49 +234,46 @@ const getCustumBio = async (user) => {
 
 
 function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-} 
+    return new Promise(resolve => setTimeout(resolve, time));
+}
 
 const getRandomMusic = async (user) => {
     try {
         let searchText = fakerFR.music.songName()
         const url = `${process.env.GENIUS_API_PATH}search?q=${searchText}&page=1`;
-        console.log("url : ", url)
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-            Authorization: `Bearer ${process.env.GENIUS_API_TOKEN}`,
+                Authorization: `Bearer ${process.env.GENIUS_API_TOKEN}`,
             },
         });
         const dataJson = await response.json();
         let status_code = response.status;
         if (status_code !== 200) {
-            throw new Error(dataJson.message);
+            throw new Error(dataJson);
         }
         let music = dataJson.response.hits[0].result;
-       const url2 = `${process.env.GENIUS_API_PATH}songs/${music.id}?text_format=plain&`;
+        const url2 = `${process.env.GENIUS_API_PATH}songs/${music.id}?text_format=plain&`;
         const response2 = await fetch(url2, {
             method: 'GET',
             headers: {
-            Authorization: `Bearer ${process.env.GENIUS_API_TOKEN}`,
+                Authorization: `Bearer ${process.env.GENIUS_API_TOKEN}`,
             },
         });
         const data = await response2.json();
         let music2 = data.response.song
-        console.log("user : ", user)
         user.music = {
             id: music2.id,
             title: music2.title,
-            image: music2.song_art_image_thumbnail_url,  
+            image: music2.song_art_image_thumbnail_url,
             artist: { id: music2.primary_artist.id, name: music2.primary_artist.name, image: music2.primary_artist.image_url },
-            album: { id: music2.album.id, title: music2.album.name, image: music2.album.cover_art_url } ,
+            album: { id: music2.album.id, title: music2.album.name, image: music2.album.cover_art_url },
         };
-        console.log("user music : ", user.music)
         return user;
     }
     catch (error) {
-        console.log("error : ", error);
-    }   
+        throw error;
+    }
 }
 
 const getRandomModules = async (user) => {
@@ -257,13 +293,18 @@ const getRandomModules = async (user) => {
         user.profileModules.secondaryElement = user_modules[1];
         user.profileModules.tertiaryElement = user_modules[2];
         user.profileModules.quaternaryElement = user_modules[3];
-        console.log("user : ", user.profileModules)
         return user;
     }
     catch (error) {
-        console.log("error : ", error);
+        throw error;
     }
 }
 
 
-module.exports = { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules }
+
+const getRandomBoolean = () => {
+    return Math.random() < 0.5;
+}
+
+
+module.exports = { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules, getRandomBoolean, getPreferences }

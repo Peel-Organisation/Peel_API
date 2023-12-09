@@ -43,16 +43,16 @@ const userSchema = new mongoose.Schema({
   music: {
     id: String,
     title: String,
-    image: String,  
-    artist: { 
-      id: String, 
-      name: String, 
-      image: String 
+    image: String,
+    artist: {
+      id: String,
+      name: String,
+      image: String
     },
-    album: { 
-      id: String, 
-      title: String, 
-      image: String 
+    album: {
+      id: String,
+      title: String,
+      image: String
     },
   },
   questions: [
@@ -119,6 +119,8 @@ const userSchema = new mongoose.Schema({
     },
     searchRange: Number,
     sexual_orientation: String,
+    searchLove: Boolean,
+    searchFriend: Boolean
   },
   biographie: String,
   isFake: { type: Boolean, default: false },
