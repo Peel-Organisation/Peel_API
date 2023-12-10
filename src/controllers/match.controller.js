@@ -112,6 +112,14 @@ exports.getCompatibleProfil = async (req, res, next) => {
           //   $in: orientationTab,
           //   $exists: true
           // },
+          "preferences.searchLove": {
+            // $eq: true,
+            $exists: true
+          },
+          "preferences.searchFriend": {
+            // $eq: true,
+            $exists: true
+          },
           "firstName": {
             $exists: true
           },
@@ -145,7 +153,7 @@ exports.getCompatibleProfil = async (req, res, next) => {
           }
         },
           [
-            "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake", "profileModules"
+            "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake", "profileModules", "preferences.searchLove", "preferences.searchFriend"
           ]
         )
           .then(profiles => {
