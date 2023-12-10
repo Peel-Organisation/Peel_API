@@ -190,7 +190,6 @@ const getCustumBio = async (user) => {
     prompt += `Intérêts : ${interest}\n`;
     prompt += "je me considère comme : " + user.biographie
 
-    // console.log("prompt : ", prompt)
 
 
     const requestOptions = {
@@ -214,16 +213,13 @@ const getCustumBio = async (user) => {
 
     try {
         const response = await fetch(apiUrl, requestOptions)
-        console.log("response : ", response)
         const dataJson = await response.json();
         let status_code = response.status;
         if (status_code !== 200) {
             console.log("dataJson : ", dataJson)
             throw new Error(dataJson);
         }
-        // console.log("dataJson : ", dataJson)
         const bio = dataJson.choices[0].message.content;
-        console.log("bio : ", bio)
         user.biographie = bio;
         return user;
     } catch (error) {
