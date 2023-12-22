@@ -82,6 +82,79 @@ exports.createConversation = (req, res, next) => {
   }
 };
 
+exports.createInstantConversation = (req, res, next) => {
+  //création de la nouvelle conversation
+  const newConversation = new Conversation({
+    messages: [],
+  });
+
+  //L'utilisateur 1 est l'utilisateur souhaitant créer une conversation instantanée avec un autre utilisateur sans passer par le matching
+  //Il dispose par défaut de 5 possibilités de conversation instantanée
+  //On vérifie qu'il lui reste des possibilités de conversation instantanée
+  User.findOne({ _id: req.userToken.id })
+    .then((user) => {
+      if (user.nbInstantConversationPossibilities > 0) {
+        //On décrémente le nombre de possibilités de conversation instantanée
+        user.nbInstantConversationPossibilities -= 1;
+        user.save();
+        //ajout de la conversation dans la liste des conversations de l'utilisateur 1
+        User.findOneAndUpdate(
+          { _id: req.userToken.id },
+          { $push: { matches: [newConversation] } }
+        )
+          .then((User1) => {
+            //ajout de la conversation dans la liste des conversations de l'utilisateur 2
+            User.findOneAndUpdate(
+              { _id: req.body.user2 },
+              { $push: { matches: [newConversation] } }
+            )
+              .then((User2) => {
+                // Check if the conversation with the given members already exists
+                Conversation.findOne({ members: { $all: [User1, User2] } })
+                  .then((existingConversation) => {
+                    if (existingConversation) {
+                      // Conversation already exists
+                      res.send({
+                        message: "Conversation already exists",
+                        conversation: existingConversation,
+                      });
+                    } else {
+                      // Conversation doesn't exist, so add new conversation
+                      newConversation.members.push(User1);
+                      newConversation.members.push(User2);
+                      newConversation.save().then((conversation) => {
+                          res.send({
+                            message:
+                              "conversation " + conversation._id + " successfully added", conversation: conversation,
+                          });
+                        })
+                        .catch((error) => {
+                          next(error);
+                        });
+                    }
+                  })
+                  .catch((error) => {
+                    next(error);
+                  });
+              })
+              .catch((error) => {v 
+                next(error);
+              });
+          })
+          .catch((error) => {;
+            next(error);
+          });
+      } else {
+        res.status(400).send({
+          message: "This user has no more instant conversation possibilities available",
+        });
+      }
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 exports.deleteConversation = async (req, res, next) => {
   try {
     res.send("endpoint wip");
