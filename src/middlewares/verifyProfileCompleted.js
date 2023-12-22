@@ -31,12 +31,12 @@ const verifyProfileCompleted = (req, res, next) => {
                 //     message: "User sexual orientation not found",
                 //     });
                 // }
-                if (user.preferences.searchLove === null || user.preferences.searchLove === undefined) {
+                if (user.preferences?.searchLove === null || user.preferences?.searchLove === undefined) {
                     return res.status(400).send({
                         message: "User search love not found",
                     });
                 }
-                if (user.preferences.searchFriend === null || user.preferences.searchFriend === undefined) {
+                if (user.preferences?.searchFriend === null || user.preferences?.searchFriend === undefined) {
                     return res.status(400).send({
                         message: "User search friend not found",
                     });
