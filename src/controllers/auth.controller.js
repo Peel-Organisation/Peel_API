@@ -4,31 +4,45 @@ const jwt = require("jsonwebtoken");
 
 exports.register = (req, res, next) => {
   try {
-    const hashedPassword = bcrypt.hashSync(req.body.password, 11);
-    const newUser = new User({
-      email: req.body.email,
-      password: hashedPassword,
-      firstName: req.body.firstname,
-      lastName: req.body.lastname,
-    });
-    newUser.save()
-      .then((user) => {
-        let userToken = jwt.sign(
-          {
-            id: user._id,
-            isAdmin: user.isAdmin,
-          },
-          process.env.JWT_SECRET
-        );
-        res.send({
-          message: "User " + user._id + " successfully registered",
-          auth: true,
-          token: userToken,
-          userId: user._id,
-        });
-      }).catch((error) => {
-        next(error)
+    //check if user already exists
+    console.log(req.body.email);
+    if (!req.body.email || !req.body.password) {
+      return res.status(400).send({
+        message: "Please enter email and password",
       });
+    }
+    User.find({ email: req.body.email }).then((user) => {
+      if (user.length >= 1) {
+        return res.status(409).send({
+          message: "Email already exists",
+        });
+      }
+
+      const hashedPassword = bcrypt.hashSync(req.body.password, 11);
+      const newUser = new User({
+        email: req.body.email,
+        password: hashedPassword,
+      });
+      newUser.save()
+        .then((user) => {
+          let userToken = jwt.sign(
+            {
+              id: user._id,
+              isAdmin: user.isAdmin,
+            },
+            process.env.JWT_SECRET
+          );
+          res.send({
+            message: "User " + user._id + " successfully registered",
+            auth: true,
+            token: userToken,
+            userId: user._id,
+          });
+        }).catch((error) => {
+          next(error)
+        });
+    }
+    );
   } catch (error) {
     next(error)
   }
