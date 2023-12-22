@@ -16,7 +16,17 @@ exports.getAllQuestion = async (req, res, next) => {
 
 exports.getQuestion = async (req, res, next) => {
   try {
-    res.send("successfully logged in");
+    Question.findById(req.params.id)
+      .then(question => {
+        if (!question) {
+          return res.status(404).send({
+            message: "Question Not found",
+          });
+        }
+        res.send(question);
+      }).catch((error) => {
+        next(error);
+      })
   } catch (error) {
     next(error)
   }
@@ -47,7 +57,20 @@ exports.addQuestion = async (req, res, next) => {
 
 exports.deleteQuestion = async (req, res, next) => {
   try {
-    res.send("successfully logged in");
+    Question.findByIdAndDelete(req.params.id).then(question => {
+      if (!question) {
+        return res.status(404).send({
+          message: "Question Not found",
+        });
+      }
+      res.send({
+        message: "Question " + question._id + " successfully deleted",
+        question: question,
+      }
+      );
+    }).catch((error) => {
+      next(error);
+    })
   } catch (error) {
     next(error)
   }
@@ -55,8 +78,26 @@ exports.deleteQuestion = async (req, res, next) => {
 
 exports.updateQuestion = async (req, res, next) => {
   try {
-    res.send("successfully logged in");
-  } catch (error) {
+    Question.findByIdAndUpdate(req.params.id, req.body)
+      .then((question) => {
+        if (!question) {
+          return res.status(404).send({
+            message: "Question Not found",
+          });
+        }
+        Question.findById(question._id).then(questionupdated => {
+          res.send({
+            message: "Question " + question._id + " successfully updated",
+            question: questionupdated,
+          });
+        }).catch((error) => {
+          next(error);
+        })
+      }).catch((error) => {
+        next(error);
+      })
+  }
+  catch (error) {
     next(error)
   }
 };
