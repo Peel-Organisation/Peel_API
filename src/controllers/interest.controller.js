@@ -45,7 +45,7 @@ exports.addInterest = async (req, res, next) => {
     newInterest.save().then((interest) => {
       res.send({
         message: "interest " + interest._id + " successfully added",
-        interest: interest,
+        interestId: interest._id,
       });
     }).catch((error) => {
       next(error)
@@ -63,7 +63,10 @@ exports.deleteInterest = async (req, res, next) => {
           message: "Interest Not found with id " + req.params.id,
         });
       }
-      res.send(interest);
+      res.send({
+        message: "Interest " + interest._id + " successfully deleted",
+        interestId: interest._id,
+      });
     }).catch((error) => {
       next(error);
     })
@@ -81,7 +84,10 @@ exports.updateInterest = async (req, res, next) => {
             message: "Interest Not found",
           });
         }
-        res.send(interest);
+        res.send({
+          message: "Interest " + interest._id + " successfully updated",
+          interestId: interest._id,
+        });
       })
       .catch((error) => {
         next(error);
