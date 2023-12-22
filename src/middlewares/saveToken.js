@@ -4,10 +4,7 @@ const User = require('../models/user.js');
 const saveToken = (req, res, next) => {
     console.log(req.userToken)
     if (!req.headers.firebasetoken) {
-        return res.status('401').send({
-            auth: false,
-            message: 'No firebase token provided',
-        });
+        next()
     }
     User.findById(req.userToken.id)
         .then((user) => {
