@@ -155,6 +155,7 @@ const userSchema = new mongoose.Schema({
       default: "questions",
     },
   },
+  nbInstantConversationPossibilities: { type: Number, default: 1 },
 });
 
 module.exports = mongoose.model("User", userSchema);
