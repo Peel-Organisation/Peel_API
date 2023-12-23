@@ -47,7 +47,7 @@ exports.createConversation = (req, res, next) => {
             if (existingConversation) {
               // Conversation already exists
               res.send({
-                mes  sage: "Conversation already exists",
+                message: "Conversation already exists",
                 conversationId: existingConversation._id,
               });
             } else {
@@ -133,7 +133,6 @@ exports.createInstantConversation = (req, res, next) => {
               });
           })
           .catch((error) => {
-            ;
             next(error);
           });
       } else {
