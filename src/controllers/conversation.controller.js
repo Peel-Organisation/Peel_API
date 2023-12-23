@@ -81,27 +81,20 @@ exports.createConversation = (req, res, next) => {
 };
 
 exports.createInstantConversation = (req, res, next) => {
-  //création de la nouvelle conversation
   const newConversation = new Conversation({
     messages: [],
   });
 
-  //L'utilisateur 1 est l'utilisateur souhaitant créer une conversation instantanée avec un autre utilisateur sans passer par le matching
-  //Il dispose par défaut de 5 possibilités de conversation instantanée
-  //On vérifie qu'il lui reste des possibilités de conversation instantanée
   User.findOne({ _id: req.userToken.id })
     .then((user) => {
       if (user.nbInstantConversationPossibilities > 0) {
-        //On décrémente le nombre de possibilités de conversation instantanée
         user.nbInstantConversationPossibilities -= 1;
         user.save();
-        //ajout de la conversation dans la liste des conversations de l'utilisateur 1
         User.findOneAndUpdate(
           { _id: req.userToken.id },
           { $push: { matches: [newConversation] } }
         )
           .then((User1) => {
-            //ajout de la conversation dans la liste des conversations de l'utilisateur 2
             User.findOneAndUpdate(
               { _id: req.body.user2 },
               { $push: { matches: [newConversation] } }
