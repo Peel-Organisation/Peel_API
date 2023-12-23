@@ -23,19 +23,16 @@ exports.getAllConversation = (req, res, next) => {
 
 exports.createConversation = (req, res, next) => {
   try {
-    console.log("createConversation")
-    //création de la nouvelle conversation
     const newConversation = new Conversation({
       messages: [],
     });
 
-    //ajout de la conversation dans la liste des conversations de l'utilisateur 1
+    //adding the conversation to the user's list of conversations
     User.findOneAndUpdate(
       { _id: req.body.user1 },
       { $push: { matches: [newConversation] } }
     ).then((User1) => {
 
-      //ajout de la conversation dans la liste des conversations de l'utilisateur 2
       User.findOneAndUpdate(
         {
           _id:
@@ -50,7 +47,7 @@ exports.createConversation = (req, res, next) => {
             if (existingConversation) {
               // Conversation already exists
               res.send({
-                message: "Conversation already exists",
+                mes  sage: "Conversation already exists",
                 conversationId: existingConversation._id,
               });
             } else {
@@ -124,11 +121,11 @@ exports.createInstantConversation = (req, res, next) => {
                       newConversation.members.push(User1);
                       newConversation.members.push(User2);
                       newConversation.save().then((conversation) => {
-                          res.send({
-                            message:
-                              "conversation " + conversation._id + " successfully added", conversation: conversation,
-                          });
-                        })
+                        res.send({
+                          message:
+                            "conversation " + conversation._id + " successfully added", conversation: conversation,
+                        });
+                      })
                         .catch((error) => {
                           next(error);
                         });
@@ -138,11 +135,12 @@ exports.createInstantConversation = (req, res, next) => {
                     next(error);
                   });
               })
-              .catch((error) => {v 
+              .catch((error) => {
                 next(error);
               });
           })
-          .catch((error) => {;
+          .catch((error) => {
+            ;
             next(error);
           });
       } else {
