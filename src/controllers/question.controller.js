@@ -34,8 +34,8 @@ exports.addQuestion = async (req, res, next) => {
     });
     newQuestion.save().then((question) => {
       res.send({
-        message: "question " + question._id + " successfully added",
-        question: question,
+        message: "Question " + question._id + " successfully created",
+        questionId: question._id,
       });
     }).catch((error) => {
       next(error);

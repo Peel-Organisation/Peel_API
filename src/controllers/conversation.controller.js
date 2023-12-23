@@ -1,6 +1,7 @@
 const Conversation = require("../models/conversation.js");
 const User = require("../models/user.js");
 const firebase = require("../firebase.js");
+const conversation = require("../models/conversation.js");
 
 exports.getAllConversation = (req, res, next) => {
   try {
@@ -50,7 +51,7 @@ exports.createConversation = (req, res, next) => {
               // Conversation already exists
               res.send({
                 message: "Conversation already exists",
-                conversation: existingConversation,
+                conversationId: existingConversation._id,
               });
             } else {
               // Conversation doesn't exist, so add new conversation
@@ -61,7 +62,7 @@ exports.createConversation = (req, res, next) => {
               newConversation.save().then((conversation) => {
                 res.send({
                   message: "conversation " + conversation._id + " successfully added",
-                  conversation: conversation,
+                  conversationId: conversation._id,
                 });
               }).catch((error) => {
                 next(error);

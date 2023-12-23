@@ -30,7 +30,10 @@ exports.updateUser = async (req, res, next) => {
             message: "User Not found",
           });
         }
-        res.send(user);
+        res.send({
+          message: "User " + user._id + " successfully updated",
+          userId: user._id,
+        });
       }).catch((error) => {
         next(error);
       })
@@ -47,7 +50,10 @@ exports.deleteUser = async (req, res, next) => {
           message: "User Not found",
         });
       }
-      res.send(user);
+      res.send({
+        message: "User " + user._id + " successfully deleted",
+        userId: user._id,
+      });
     }).catch((error) => {
       next(error);
     })
@@ -82,7 +88,7 @@ exports.addUserAdmin = async (req, res, next) => {
   new User(req.body).save().then((user) => {
     res.send({
       message: "user " + user._id + " successfully added",
-      user: user,
+      userId: user._id,
     });
   }).catch((error) => {
     next(error);
@@ -98,7 +104,10 @@ exports.updateUserAdmin = async (req, res, next) => {
         });
       }
       User.findById(user._id).then(userupdated => {
-        res.send(userupdated);
+        res.send({
+          message: "User " + userupdated._id + " successfully updated",
+          userId: userupdated._id,
+        });
       }).catch((error) => {
         next(error);
       })
@@ -114,7 +123,10 @@ exports.deleteUserAdmin = async (req, res, next) => {
         message: "User Not found with id " + req.params.id,
       });
     }
-    res.send(user);
+    res.send({
+      message: "User " + user._id + " successfully deleted",
+      userId: user._id,
+    });
   }).catch((error) => {
     next(error);
   })

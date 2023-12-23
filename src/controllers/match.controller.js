@@ -156,6 +156,8 @@ exports.getCompatibleProfil = async (req, res, next) => {
             "firstName", "lastName", "gender", "gif", "movie", "music", "music", "questions", "interests", "biographie", "isFake", "profileModules", "preferences.searchLove", "preferences.searchFriend"
           ]
         )
+          .populate("interests")
+          .populate({ path: 'questions', populate: "question" })
           .then(profiles => {
             if (userSexualOrientation === "bisexual") {
               profiles = profiles.filter(profile => {
