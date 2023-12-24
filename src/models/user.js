@@ -106,6 +106,10 @@ const userSchema = new mongoose.Schema({
       _id: false,
     },
   ],
+  limitedActions: {
+    date: [],
+    nbSwipe : { type: Number, default: 10 },
+  },
   blocked: [
     {
       type: mongoose.Schema.Types.ObjectId,

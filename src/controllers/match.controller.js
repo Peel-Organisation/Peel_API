@@ -256,7 +256,8 @@ const calculateCompatibility = (user1, user2, filters) => {
   * @access Private
   * @param {String} id
 */
-exports.PutLikeDislike = async (req, res, next) => {
+exports.PutLikeDislike = async (req, res, next) => { 
+
   try {
     const userTarget = await User.findById(req.params.id);
     const currentUser = await User.findById(req.userToken.id);
@@ -306,12 +307,34 @@ exports.PutLikeDislike = async (req, res, next) => {
       });
     }
 
+    //push like
     currentUser.likes.push(like);
     userTarget.likedBy.push(likedby);
     currentUser.save();
     userTarget.save();
 
+    // Limit likes per day
+    const date = new Date();
+    const currentDate = `${date.getDate()} ${date.getMonth()} ${date.getFullYear()}`;
+
+    if(like.statelike === 'like') {
+      if(currentUser.limitedActions.date[0] !== currentDate || currentUser.limitedActions.date[0] == undefined) {
+        currentUser.limitedActions.date.splice(0,currentUser.limitedActions.date.length);
+        currentUser.limitedActions.date[0] = currentDate;
+      }
+      else if(currentUser.limitedActions.date.length >= currentUser.limitedActions.nbSwipe) {
+        console.log('Maximum likes number limit reached')
+      }
+      else {
+        currentUser.limitedActions.date.push(currentDate);
+      }
+    }
+
+
     const isMatch = userTarget.likes.find((like) => like?.userID?.toString() === currentUser?._id?.toString() && like.statelike === 'like');
+
+    
+
 
     if (isMatch) {
       const conversation = new Conversation({
