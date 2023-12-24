@@ -295,9 +295,11 @@ const getRandomMusic = async (user) => {
 
 const getRandomModules = async (user) => {
     try {
+        let mainModule = ["gif", "movie", "music"]
         let modules = ["gif", "movie", "music", "biographie", "interests", "questions"];
         let user_modules = [];
-        for (let i = 0; i < 4; i++) {
+        user_modules.push(mainModule[Math.floor(Math.random() * mainModule.length)]);
+        for (let i = 1; i < 4; i++) {
             let module = modules[Math.floor(Math.random() * modules.length)];
             if (user_modules.includes(module)) {
                 i--;
