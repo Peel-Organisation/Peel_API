@@ -114,6 +114,27 @@ const getInterestList = async (user) => {
     }
 }
 
+const getQuestionsList = async (user) => {
+    try {
+        const requestOptions = {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'GET'
+        };
+        let link = `${process.env.API_LINK}/question`;
+        const response = await fetch(link, requestOptions)
+        const dataJson = await response.json();
+        let status_code = response.status;
+        if (status_code !== 200) {
+            throw new Error(dataJson);
+        }
+        let questions_list = dataJson;
+        return questions_list;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 const updateInterest = async (user) => {
     try {
         const interest_list = await getInterestList();
@@ -274,9 +295,11 @@ const getRandomMusic = async (user) => {
 
 const getRandomModules = async (user) => {
     try {
+        let mainModule = ["gif", "movie", "music"]
         let modules = ["gif", "movie", "music", "biographie", "interests", "questions"];
         let user_modules = [];
-        for (let i = 0; i < 4; i++) {
+        user_modules.push(mainModule[Math.floor(Math.random() * mainModule.length)]);
+        for (let i = 1; i < 4; i++) {
             let module = modules[Math.floor(Math.random() * modules.length)];
             if (user_modules.includes(module)) {
                 i--;
@@ -302,5 +325,38 @@ const getRandomBoolean = () => {
     return Math.random() < 0.5;
 }
 
+const getRandomQuestion = async (user) => {
+    try {
+        const questions_list = await getQuestionsList();
+        console.log("questions_list : ", questions_list)
+        let user_questions = [];
+        for (let i = 0; i < 3; i++) {
+            let question = questions_list[Math.floor(Math.random() * questions_list.length)];
+            if (user_questions.includes(question)) {
+                i--;
+            } else {
+                const answer = fakerFR.lorem.sentence();
+                user_questions.push({ question: question._id, answer: answer });
 
-module.exports = { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules, getRandomBoolean, getPreferences }
+            }
+        }
+        user.questions = user_questions;
+        console.log("user_questions : ", user_questions)
+        return user;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+const getRandomAge = (user) => {
+
+    const age = Math.floor(Math.random() * 30) + 18;
+    let date = new Date();
+    date.setFullYear(date.getFullYear() - age);
+    user.birthday = date;
+    console.log("user.birthday : ", user.birthday)
+    return user;
+}
+
+module.exports = { getRandomAge, getRandomQuestion, getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules, getRandomBoolean, getPreferences }
