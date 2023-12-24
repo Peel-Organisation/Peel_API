@@ -307,34 +307,37 @@ exports.PutLikeDislike = async (req, res, next) => {
       });
     }
 
-    //push like
-    currentUser.likes.push(like);
-    userTarget.likedBy.push(likedby);
-    currentUser.save();
-    userTarget.save();
-
     // Limit likes per day
-    const date = new Date();
-    const currentDate = `${date.getDate()} ${date.getMonth()} ${date.getFullYear()}`;
 
+    const currentDate = new Date();
+    
     if(like.statelike === 'like') {
-      if(currentUser.limitedActions.date[0] !== currentDate || currentUser.limitedActions.date[0] == undefined) {
-        currentUser.limitedActions.date.splice(0,currentUser.limitedActions.date.length);
-        currentUser.limitedActions.date[0] = currentDate;
+      if(currentUser.swipeCount.date.getDate() !== currentDate.getDate() && currentUser.swipeCount.date.getMonth() !== currentDate.getMonth() && currentUser.swipeCount.date.getFullYear() !== currentDate.getFullYear() || currentUser.swipeCount.date == undefined) {
+        currentUser.swipeCount.date = currentDate;
+        
+        //push like
+        currentUser.likes.push(like);
+        userTarget.likedBy.push(likedby);
+        currentUser.save();
+        userTarget.save();
+
+        currentUser.swipeCount.count = 1;
       }
-      else if(currentUser.limitedActions.date.length >= currentUser.limitedActions.nbSwipe) {
+      else if(currentUser.swipeCount.count >= 10) {
         console.log('Maximum likes number limit reached')
       }
       else {
-        currentUser.limitedActions.date.push(currentDate);
+        //push like
+        currentUser.likes.push(like);
+        userTarget.likedBy.push(likedby);
+        currentUser.save();
+        userTarget.save();
+        
+        currentUser.swipeCount.count ++;
       }
     }
 
-
     const isMatch = userTarget.likes.find((like) => like?.userID?.toString() === currentUser?._id?.toString() && like.statelike === 'like');
-
-    
-
 
     if (isMatch) {
       const conversation = new Conversation({

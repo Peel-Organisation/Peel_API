@@ -106,9 +106,9 @@ const userSchema = new mongoose.Schema({
       _id: false,
     },
   ],
-  limitedActions: {
-    date: [],
-    nbSwipe : { type: Number, default: 10 },
+  swipeCount : {
+    count: { type: Number, default: 0 },
+    date: { type: Date, default: Date.now },
   },
   blocked: [
     {
