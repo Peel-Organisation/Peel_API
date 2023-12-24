@@ -1,6 +1,6 @@
 const { fakerFR } = require('@faker-js/faker');
 require('dotenv').config();
-const { getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules, getPreferences } = require('./utils.js');
+const { getRandomAge, getRandomGif, getRandomMovie, updateInterest, getCustumBio, getRandomMusic, getRandomModules, getPreferences, getRandomQuestion } = require('./utils.js');
 
 const faker = fakerFR
 
@@ -90,39 +90,24 @@ const updateUserList = async () => {
             }
             console.log("user : ", user._id)
             await delay(10000);
-            getRandomGif(user).then((user) => {
-                getRandomMovie(user).then((user) => {
-                    updateInterest(user).then((user) => {
-                        getRandomModules(user).then((user) => {
-                            getRandomMusic(user).then((user) => {
-                                getPreferences(user).then((user) => {
-                                    getCustumBio(user).then((user) => {
-                                        updateUser(user).then((user) => {
-                                            console.log("user updated : ", user)
-                                        }).catch((error) => {
-                                            console.log("error while updating user : ", error);
-                                        })
-                                    }).catch((error) => {
-                                        console.log("error while getting custom bio : ", error);
-                                    })
-                                }).catch((error) => {
-                                    console.log("error while getting preferences : ", error);
-                                })
-                            }).catch((error) => {
-                                console.log("error while getting random music : ", error);
-                            })
-                        }).catch((error) => {
-                            console.log("error while getting random modules : ", error);
-                        })
-                    }).catch((error) => {
-                        console.log("error while updating interest : ", error);
-                    })
-                }).catch((error) => {
-                    console.log("error while getting random movie : ", error);
-                })
-            }).catch((error) => {
-                console.log("error while getting random gif : ", error);
-            })
+            try {
+                // user = await getRandomQuestion(user)
+                user = await getRandomAge(user)
+                // user = await getRandomGif(user)
+                // user = await getRandomMovie(user)
+                // user = await updateInterest(user)
+                // user = await getRandomModules(user)
+                // user = await getRandomMusic(user)
+                // user = await getPreferences(user)
+                // user = await getCustumBio(user)
+                user = await updateUser(user)
+                console.log("user updated : ", user)
+
+            } catch (error) {
+                console.log(error)
+            }
+
+
         }
     }
 }
