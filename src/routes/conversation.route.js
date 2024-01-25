@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const conversationController = require('../controllers/conversation.controller');
 const verifyToken = require('../middlewares/verifyToken');
-const verifyAdmin = require('../middlewares/verifyAdmin');
+
 
 // conversation
 router.get('/', verifyToken, conversationController.getAllConversation);

@@ -7,6 +7,7 @@
     "dev": "nodemon --exec babel-node ./src/index.js",
     "start": "node ./build/index.js",
     "test": "jest --testTimeout=5000",
+    "test:watch": "jest --watch ",
     "faker": "node ./src/faker/user.faker.js",
     "faker-update": "node ./src/faker/user_update.faker.js",
     "build": "babel ./src -d build --copy-files",

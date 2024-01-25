@@ -4,10 +4,25 @@ exports.getAllQuestion = async (req, res, next) => {
   try {
     Question.find()
       .then(questions => {
-        res.send(questions);
-      })
-      .catch((error) => {
-        next(error);
+        if (!Array.isArray(questions)) {
+          const error = new Error("Internal server error")
+          error.statusCode = 500
+          throw error;
+        }
+        if (questions && (questions.length == 0)) {
+          const error = new Error("questions not found")
+          error.statusCode = 404
+          throw error;
+        }
+        return res.status(200).json(
+          {
+            success: true,
+            message: "questions successfully retrieved",
+            questions: questions,
+          }
+        );
+      }).catch((error) => {
+        next(error)
       })
   } catch (error) {
     next(error)
@@ -16,7 +31,31 @@ exports.getAllQuestion = async (req, res, next) => {
 
 exports.getQuestion = async (req, res, next) => {
   try {
-    res.send("successfully logged in");
+    if (req.params.id === undefined || req.params.id === null || typeof req.params.id === "integer") {
+      const error = new Error("question id is not valid")
+      error.statusCode = 400
+      throw error;
+    }
+    Question.findById(req.params.id)
+      .then(question => {
+        if (question) {
+          console.log(question)
+          return res.status(200).json(
+            {
+              success: true,
+              message: "question successfully retrieved",
+              question: question,
+            }
+          );
+        } else {
+          const error = new Error("question not found")
+          error.statusCode = 404
+          throw error;
+        }
+      })
+      .catch((error) => {
+        next(error);
+      })
   } catch (error) {
     next(error)
   }
@@ -33,9 +72,9 @@ exports.addQuestion = async (req, res, next) => {
       question: req.body.question,
     });
     newQuestion.save().then((question) => {
-      res.send({
+      res.status(200).json({
         message: "question " + question._id + " successfully added",
-        question: question,
+        questionId: question.id,
       });
     }).catch((error) => {
       next(error);
@@ -47,7 +86,21 @@ exports.addQuestion = async (req, res, next) => {
 
 exports.deleteQuestion = async (req, res, next) => {
   try {
-    res.send("successfully logged in");
+    Question.findByIdAndRemove(req.params.id)
+      .then(question => {
+        if (question) {
+          res.status(200).json({
+            message: "question " + question._id + " successfully deleted",
+          });
+        } else {
+          res.status(404).send({
+            message: "question not found",
+          });
+        }
+      })
+      .catch((error) => {
+        next(error);
+      })
   } catch (error) {
     next(error)
   }
@@ -55,7 +108,21 @@ exports.deleteQuestion = async (req, res, next) => {
 
 exports.updateQuestion = async (req, res, next) => {
   try {
-    res.send("successfully logged in");
+    Question.findByIdAndUpdate(req.params.id, req.body)
+      .then(question => {
+        if (question) {
+          res.status(200).json({
+            message: "question " + question._id + " successfully updated",
+          });
+        } else {
+          res.status(404).send({
+            message: "question not found",
+          });
+        }
+      })
+      .catch((error) => {
+        next(error);
+      })
   } catch (error) {
     next(error)
   }

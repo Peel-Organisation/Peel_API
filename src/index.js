@@ -15,8 +15,8 @@ const normalizePort = val => {
   return false;
 };
 
-const port = normalizePort(process.env.PORT || '3002');
-app.set('port', port); 
+const port = normalizePort(process.env.PORT || '3002');
+app.set('port', port);
 
 mongoose.set('strictQuery', false);
 
@@ -26,7 +26,7 @@ mongoose.connect(
   console.log('successfully connect to database');
 }).catch((err) => console.log(err));
 
-const errorHandler = error => {
+const errorPortHandler = error => {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -46,7 +46,7 @@ const errorHandler = error => {
 
 const server = http.createServer(app);
 
-server.on('error', errorHandler);
+server.on('error', errorPortHandler);
 server.on('listening', () => {
   const address = server.address();
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
