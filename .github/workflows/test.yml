@@ -1,0 +1,18 @@
+#author: @KevOneRedOne
+name: Integration Test
+
+on:
+  pull_request
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: npm install
+    - name: Run tests
+      run: npm run test
+        
+      
