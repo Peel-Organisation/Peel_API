@@ -29,6 +29,10 @@ exports.getSwipeProfil = async (req, res, next) => {
   * @desc Get users filtered with criterias for the current user
   * @access Private
 */
+
+
+let offset = 0;
+
 exports.getCompatibleProfil = async (req, res, next) => {
   try {
     const filters = req.body
@@ -182,7 +186,9 @@ exports.getCompatibleProfil = async (req, res, next) => {
 
             compatibilityTab.sort(compareScore)
 
-            res.send(compatibilityTab);
+            let offsetTab = compatibilityTab.slice(offset, offset + 10)
+
+            res.send(offsetTab);
           }).catch((error) => {
             next(error);
           })
