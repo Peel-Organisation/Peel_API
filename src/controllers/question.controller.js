@@ -60,3 +60,14 @@ exports.updateQuestion = async (req, res, next) => {
     next(error)
   }
 };
+
+exports.getIceBreaker = async (req, res, next) => {
+  try {
+    // on recupère 3 questions au hasard
+    const questions = await Question.aggregate([{ $sample: { size: 3 } }])
+    // on les envoies au client
+    res.send(questions)
+  } catch (error) {
+    next(error)
+  }
+}

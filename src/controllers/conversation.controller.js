@@ -1,7 +1,6 @@
 const Conversation = require("../models/conversation.js");
 const User = require("../models/user.js");
 const firebase = require("../firebase.js");
-const conversation = require("../models/conversation.js");
 
 exports.getAllConversation = (req, res, next) => {
   try {
@@ -23,26 +22,20 @@ exports.getAllConversation = (req, res, next) => {
 
 exports.createConversation = (req, res, next) => {
   try {
-    const newConversation = new Conversation({
-      messages: [],
-    });
 
     //adding the conversation to the user's list of conversations
-    User.findOneAndUpdate(
-      { _id: req.body.user1 },
-      { $push: { matches: [newConversation] } }
+    return User.findOne(
+      { _id: req.body.user1 }
     ).then((User1) => {
-
-      User.findOneAndUpdate(
+      if (!User1) return res.status(400).send({ message: "user1 id is missing" });
+      User.findOne(
         {
-          _id:
-            req.body.user2
-        },
-        { $push: { matches: [newConversation] } }
+          _id: req.body.user2
+        }
       ).then((User2) => {
-
+        if (!User2) return res.status(400).send({ message: "user2 id is missing" });
         // Check if the conversation with the given members already exists
-        Conversation.findOne({ members: { $all: [User1, User2] } })
+        Conversation.findOne({ members: { $all: [User1._id, User2.id] } })
           .then(existingConversation => {
             if (existingConversation) {
               // Conversation already exists
@@ -51,10 +44,14 @@ exports.createConversation = (req, res, next) => {
                 conversationId: existingConversation._id,
               });
             } else {
-              // Conversation doesn't exist, so add new conversation
-              console.log("new conversation")
-              newConversation.members.push(User1);
-              newConversation.members.push(User2);
+              console.log("existingConversation 2")
+
+              // Conversation doesn't exist, so create new conversation
+              const newConversation = new Conversation({
+                messages: [],
+                members: [User1._id, User2._id]
+              });
+              console.log(newConversation)
 
               newConversation.save().then((conversation) => {
                 res.send({
