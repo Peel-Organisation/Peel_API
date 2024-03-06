@@ -300,24 +300,25 @@ exports.PutLikeDislike = async (req, res, next) => {
 
     const isAlreadyLikedCurrent = currentUser.likes.find((like) => like?.userID?.toString() === userTarget?._id?.toString());
 
-    if (isAlreadyLikedCurrent) {
-      return res.status(400).send({
-        message: 'You already liked this user in Current.'
-      });
-    }
 
     const isAlreadyLikedTarget = currentUser.likes.find((like) => like?.userID?.toString() === userTarget?._id?.toString());
 
-    if (isAlreadyLikedTarget) {
-      return res.status(400).send({
-        message: 'You already liked this user in target'
-      });
+
+    if (!isAlreadyLikedCurrent && !isAlreadyLikedTarget) {
+      currentUser.likes.push(like);
+      userTarget.likedBy.push(likedby);
+      await currentUser.save();
+      await userTarget.save();
     }
 
-    currentUser.likes.push(like);
-    userTarget.likedBy.push(likedby);
-    currentUser.save();
-    userTarget.save();
+
+    const isConversationAlreadyExist = currentUser.matches.find((conversation) => userTarget.matches.includes(conversation));
+
+    if (isConversationAlreadyExist) {
+      return res.status(400).send({
+        message: 'Conversation already exist'
+      });
+    }
 
     const isMatch = userTarget.likes.find((like) => like?.userID?.toString() === currentUser?._id?.toString() && like.statelike === 'like');
 
@@ -325,13 +326,14 @@ exports.PutLikeDislike = async (req, res, next) => {
       const conversation = new Conversation({
         members: [currentUser._id, userTarget._id],
       });
+
       await conversation.save();
 
-      currentUser.matches.push(conversation._id);
-      userTarget.matches.push(conversation._id);
+      currentUser.matches.push(conversation);
+      userTarget.matches.push(conversation);
 
-      currentUser.save();
-      userTarget.save();
+      await currentUser.save();
+      await userTarget.save();
 
       return res.status(200).send({
         message: 'It\'s a match !',

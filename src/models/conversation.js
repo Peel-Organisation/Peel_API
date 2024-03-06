@@ -4,6 +4,7 @@ const conversationSchema = new mongoose.Schema({
     members: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        unique: false
     }],
     messages: [{
         content: String,
