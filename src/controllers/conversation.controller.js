@@ -221,6 +221,20 @@ exports.sendMessage = async (req, res, next) => {
   }
 };
 
+exports.getNbOfMessages = async (req, res, next) => {
+  try {
+    const conversationId = req.params.id;
+    Conversation.findOne({ _id: conversationId })
+      .then(conversation => {
+        res.send({ nb_messages: conversation.nb_messages });
+      }).catch((error) => {
+        next(error)
+      });
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 exports.deleteMessage = async (req, res, next) => {
   try {
@@ -237,4 +251,3 @@ exports.sendVocal = async (req, res, next) => {
     next(error)
   }
 };
-
