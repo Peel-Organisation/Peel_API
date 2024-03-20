@@ -13,7 +13,7 @@ router.post('/instant', verifyToken, conversationController.createInstantConvers
 router.post('/block', verifyToken, conversationController.BlockConversation);
 router.post('/unblock', verifyToken, conversationController.UnblockConversation);
 router.post('/report', verifyToken, conversationController.ReportConversation);
-
+router.get('/:id/nb_messages', verifyToken, conversationController.getNbOfMessages);
 
 // messages
 router.get('/message/:id', verifyToken, conversationController.getMessageConversation);
