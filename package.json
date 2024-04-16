@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/index.js",
     "start": "node ./build/index.js",
+    "ts": "ts-node ./src/index.ts",
+    "ts:watch": "tsc -w",
     "test": "jest --testTimeout=5000",
     "faker": "node ./src/faker/user.faker.js",
     "faker-update": "node ./src/faker/user_update.faker.js",
@@ -34,7 +36,6 @@
     "mongoose": "^6.8.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
-    "nodemon": "^3.0.2",
     "uuid": "8.3.2"
   },
   "devDependencies": {
@@ -49,7 +50,10 @@
     "babel-preset": "^1.1.7",
     "babel-preset-env": "^1.7.0",
     "jest": "^29.5.0",
+    "nodemon": "^3.1.0",
     "superagent": "^8.0.9",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   }
 }
